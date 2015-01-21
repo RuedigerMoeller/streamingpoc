@@ -34,11 +34,11 @@ public class EventReceiver {
                 protected void objectReceived(String s, long l, Object o) {
                     if ( "END".equals(o) ) {
                         backPub.sendObject(null,o,true);
-                        hi.outputPercentileDistribution(System.out,1000.0);
+//                        hi.outputPercentileDistribution(System.out,1000.0);
                         hi.reset();
                         return;
                     }
-                    hi.recordValue(System.nanoTime() - ((MeasuredEvent) o).getSendTimeStampNanos());
+//                    hi.recordValue(System.nanoTime() - ((MeasuredEvent) o).getSendTimeStampNanos());
                     EventReceiver.this.objectReceived(s,l,o);
                     backPub.sendObject(null,o,true);
                     measure.count();
