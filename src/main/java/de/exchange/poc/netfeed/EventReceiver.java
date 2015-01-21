@@ -29,13 +29,13 @@ public class EventReceiver {
 
         RateMeasure measure = new RateMeasure("receive rate");
         fastCast.onTransport("default").subscribe( "stream",
-            new ObjectSubscriber(MarketEvent.class) {
+            new ObjectSubscriber(false,MarketEvent.class) {
                 @Override
                 protected void objectReceived(String s, long l, Object o) {
                     if ( "END".equals(o) ) {
                         backPub.sendObject(null,o,true);
 //                        hi.outputPercentileDistribution(System.out,1000.0);
-                        hi.reset();
+//                        hi.reset();
                         return;
                     }
 //                    hi.recordValue(System.nanoTime() - ((MeasuredEvent) o).getSendTimeStampNanos());

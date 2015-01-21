@@ -32,7 +32,7 @@ public class EventPublisher {
         );
 
         fastCast.onTransport("back").subscribe( "back",
-            new ObjectSubscriber(MarketEvent.class) {
+            new ObjectSubscriber(false,MarketEvent.class) {
                 @Override
                 protected void objectReceived(String s, long l, Object o) {
                     if ( "END".equals(o) ) {
