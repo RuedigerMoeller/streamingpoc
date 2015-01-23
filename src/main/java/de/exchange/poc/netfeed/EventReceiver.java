@@ -43,6 +43,11 @@ public class EventReceiver {
                     backPub.sendObject(null,o,true);
                     measure.count();
                 }
+                @Override
+                public boolean dropped() {
+                    System.exit(-2);
+                    return false;
+                }
         });
     }
 

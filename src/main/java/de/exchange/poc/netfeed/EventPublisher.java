@@ -47,6 +47,12 @@ public class EventPublisher {
                     }
                     hi.recordValue(System.nanoTime()-((MeasuredEvent)o).getSendTimeStampNanos());
                 }
+
+                @Override
+                public boolean dropped() {
+                    System.exit(-2);
+                    return false;
+                }
             });
 
     }
@@ -75,7 +81,7 @@ public class EventPublisher {
 
         pub.initFastCast();
         while (true)
-            pub.run( pub::createMarketEvent, 1_000, 10_000_000 ); // 93_000 = 10k, 27_000 = 30k, 10_500 = 70k
+            pub.run( pub::createMarketEvent, 500, 5_000_000 ); // 93_000 = 10k, 27_000 = 30k, 10_500 = 70k, 4_900 = 140k
 
     }
 
