@@ -8,6 +8,8 @@ import org.nustaq.fastcast.util.RateMeasure;
 
 import java.lang.invoke.MethodHandle;
 import java.util.ArrayList;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.function.IntFunction;
@@ -20,6 +22,7 @@ public class EventPublisher {
     FastCast fastCast;
     ObjectPublisher pub;
     Histogram hi = new Histogram(TimeUnit.SECONDS.toNanos(10),3);
+    Executor dumper = Executors.newCachedThreadPool();
 
     public void initFastCast() throws Exception {
         fastCast =  FastCast.getFastCast();
@@ -36,8 +39,10 @@ public class EventPublisher {
                 @Override
                 protected void objectReceived(String s, long l, Object o) {
                     if ( "END".equals(o) ) {
-                        hi.outputPercentileDistribution(System.out,1000.0);
-                        hi.reset();
+                        Histogram oldHi = hi;
+                        hi = new Histogram(TimeUnit.SECONDS.toNanos(10),3);
+                        dumper.execute( () -> oldHi.outputPercentileDistribution(System.out,1000.0) );
+//                        hi.reset();
                         return;
                     }
                     hi.recordValue(System.nanoTime()-((MeasuredEvent)o).getSendTimeStampNanos());
@@ -70,7 +75,7 @@ public class EventPublisher {
 
         pub.initFastCast();
         while (true)
-            pub.run( pub::createMarketEvent, 50000, 100_000 );
+            pub.run( pub::createMarketEvent, 1_000, 10_000_000 ); // 93_000 = 10k, 27_000 = 30k, 10_500 = 70k
 
     }
 
