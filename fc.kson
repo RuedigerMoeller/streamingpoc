@@ -11,7 +11,7 @@ ClusterConf {
         {
             name:      default
 
-            dgramsize: 1500
+            dgramsize: 650
             socketReceiveBufferSize: 8_000_000
             socketSendBufferSize:    1_000_000
 
@@ -32,7 +32,7 @@ ClusterConf {
         {
             name:      back
 
-            dgramsize: 1500
+            dgramsize: 650
             socketReceiveBufferSize: 8_000_000
             socketSendBufferSize:    1_000_000
 
@@ -58,12 +58,12 @@ ClusterConf {
             name: stream
 
             pub: {
-                numPacketHistory: 240_000
+                numPacketHistory: 400_000
                 pps: 50_000
                 ppsWindow: 1000
             }
             sub: {
-                receiveBufferPackets: 100_000
+                receiveBufferPackets: 200_000
                 senderHBTimeout: 5000
             }
         }
@@ -73,12 +73,12 @@ ClusterConf {
             name: back
 
             pub: {
-                numPacketHistory: 240_000
+                numPacketHistory: 400_000
                 pps: 50_000
                 ppsWindow: 1000
             }
             sub: {
-                receiveBufferPackets: 100_000
+                receiveBufferPackets: 200_000
                 senderHBTimeout: 5000
             }
         }
