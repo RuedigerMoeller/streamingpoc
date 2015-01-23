@@ -29,7 +29,7 @@ public class EventReceiver {
 
         RateMeasure measure = new RateMeasure("receive rate");
         fastCast.onTransport("default").subscribe( "stream",
-            new ObjectSubscriber(false,MarketEvent.class) {
+            new ObjectSubscriber(MarketEvent.class) {
                 @Override
                 protected void objectReceived(String s, long l, Object o) {
                     if ( "END".equals(o) ) {
