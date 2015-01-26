@@ -17,7 +17,7 @@ ClusterConf {
 
             # em1: 172.23.203.239  p5p1: 192.168.0.1  ttbm50
             # p5p1: 192.168.0.2  ttbm51
-            interfaceAddr:  192.168.0.2
+            interfaceAddr:  192.168.0.1
 
             multicastAddr:  229.9.9.10
             port:      46789
@@ -37,7 +37,7 @@ ClusterConf {
             socketSendBufferSize:    128_000
 
             # em1: 172.23.203.239  p5p1: 192.168.0.1
-            interfaceAddr:  192.168.0.2
+            interfaceAddr:  192.168.0.1
             ttl: 1
 
             multicastAddr:  229.10.10.11
@@ -74,7 +74,6 @@ ClusterConf {
             pub: {
                 numPacketHistory: 400_000
                 pps: 50_000
-                ppsWindow: 1000
             }
             sub: {
                 receiveBufferPackets: 200_000

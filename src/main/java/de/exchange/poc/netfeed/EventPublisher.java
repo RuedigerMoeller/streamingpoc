@@ -81,7 +81,7 @@ public class EventPublisher {
 
         pub.initFastCast();
         while (true)
-            pub.run( pub::createMarketEvent, 500, 5_000_000 ); // 93_000 = 10k, 27_000 = 30k, 10_500 = 70k, 4_900 = 140k
+            pub.run( pub::createMarketEvent, 27_000, 1_000_000 ); // 93_000 = 10k, 27_000 = 30k, 10_500 = 70k, 4_900 = 140k
 
     }
 
