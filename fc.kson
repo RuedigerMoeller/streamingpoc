@@ -11,13 +11,13 @@ ClusterConf {
         {
             name:      default
 
-            dgramsize: 1500
-            socketReceiveBufferSize: 8_000_000
-            socketSendBufferSize:    1_000_000
+            dgramsize: 1000
+            socketReceiveBufferSize: 1_000_000
+            socketSendBufferSize:    128_000
 
             # em1: 172.23.203.239  p5p1: 192.168.0.1  ttbm50
             # p5p1: 192.168.0.2  ttbm51
-            interfaceAddr:  192.168.0.2
+            interfaceAddr:  192.168.0.1
 
             multicastAddr:  229.9.9.10
             port:      46789
@@ -32,12 +32,12 @@ ClusterConf {
         {
             name:      back
 
-            dgramsize: 1500
-            socketReceiveBufferSize: 8_000_000
-            socketSendBufferSize:    1_000_000
+            dgramsize: 1000
+            socketReceiveBufferSize: 1_000_000
+            socketSendBufferSize:    128_000
 
             # em1: 172.23.203.239  p5p1: 192.168.0.1
-            interfaceAddr:  192.168.0.2
+            interfaceAddr:  192.168.0.1
             ttl: 1
 
             multicastAddr:  229.10.10.11
@@ -58,12 +58,11 @@ ClusterConf {
             name: stream
 
             pub: {
-                numPacketHistory: 240_000
+                numPacketHistory: 400_000
                 pps: 50_000
-                ppsWindow: 1000
             }
             sub: {
-                receiveBufferPackets: 100_000
+                receiveBufferPackets: 200_000
                 senderHBTimeout: 5000
             }
         }
@@ -73,12 +72,11 @@ ClusterConf {
             name: back
 
             pub: {
-                numPacketHistory: 240_000
+                numPacketHistory: 400_000
                 pps: 50_000
-                ppsWindow: 1000
             }
             sub: {
-                receiveBufferPackets: 100_000
+                receiveBufferPackets: 200_000
                 senderHBTimeout: 5000
             }
         }
