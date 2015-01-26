@@ -11,9 +11,9 @@ ClusterConf {
         {
             name:      default
 
-            dgramsize: 650
-            socketReceiveBufferSize: 8_000_000
-            socketSendBufferSize:    1_000_000
+            dgramsize: 1000
+            socketReceiveBufferSize: 1_000_000
+            socketSendBufferSize:    128_000
 
             # em1: 172.23.203.239  p5p1: 192.168.0.1  ttbm50
             # p5p1: 192.168.0.2  ttbm51
@@ -32,9 +32,9 @@ ClusterConf {
         {
             name:      back
 
-            dgramsize: 650
-            socketReceiveBufferSize: 8_000_000
-            socketSendBufferSize:    1_000_000
+            dgramsize: 1000
+            socketReceiveBufferSize: 1_000_000
+            socketSendBufferSize:    128_000
 
             # em1: 172.23.203.239  p5p1: 192.168.0.1
             interfaceAddr:  192.168.0.2
@@ -60,7 +60,6 @@ ClusterConf {
             pub: {
                 numPacketHistory: 400_000
                 pps: 50_000
-                ppsWindow: 1000
             }
             sub: {
                 receiveBufferPackets: 200_000
