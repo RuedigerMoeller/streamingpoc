@@ -97,6 +97,7 @@ public class EventPublisher {
             struct.setAskPrc(bidPrc + 1);
             struct.setAskQty(10);
             struct.setBidQty(11);
+            struct.setSendTimeStampNanos(System.nanoTime());
             while( ! pub.offer( null, struct.getBase(), true ) ) {
                 // spin
             }
