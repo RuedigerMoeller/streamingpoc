@@ -45,7 +45,7 @@ public class RTTClient {
      */
     void doPublish() throws IOException, EntityNotFoundException, LoginException, ServerErrorException
     {
-        Uri uri = new Uri.Builder("esp://localhost:19011/dbag/rtt").create();
+        Uri uri = new Uri.Builder("esp://192.168.0.1:19011/dbag/rtt").create();
 
         // Change credentials to match installation
         Credentials creds = new Credentials.Builder(Credentials.Type.USER_PASSWORD).setUser("sap").setPassword("proofconcept").create();
@@ -181,7 +181,7 @@ public class RTTClient {
 
     void doSubcribe() throws IOException, EntityNotFoundException, LoginException, ServerErrorException
     {
-        Uri uri = new Uri.Builder("esp://localhost:19011/dbag/rtt").create();
+        Uri uri = new Uri.Builder("esp://192.168.0.1:19011/dbag/rtt").create();
 
         // Change credentials to match installation
         Credentials creds = new Credentials.Builder(Credentials.Type.USER_PASSWORD).setUser("sap").setPassword("proofconcept").create();

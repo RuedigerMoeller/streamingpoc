@@ -1,10 +1,16 @@
 package de.exchange.poc.netfeed;
 
 import org.HdrHistogram.Histogram;
+import org.nustaq.fastcast.api.FCPublisher;
+import org.nustaq.fastcast.api.FCSubscriber;
 import org.nustaq.fastcast.api.FastCast;
 import org.nustaq.fastcast.api.util.ObjectPublisher;
 import org.nustaq.fastcast.api.util.ObjectSubscriber;
 import org.nustaq.fastcast.util.RateMeasure;
+import org.nustaq.offheap.bytez.Bytez;
+import org.nustaq.offheap.structs.FSTStruct;
+import org.nustaq.offheap.structs.structtypes.StructString;
+import org.nustaq.offheap.structs.unsafeimpl.FSTStructFactory;
 
 import java.lang.invoke.MethodHandle;
 import java.util.ArrayList;
@@ -20,7 +26,7 @@ import java.util.function.IntFunction;
 public class EventPublisher {
 
     FastCast fastCast;
-    ObjectPublisher pub;
+    FCPublisher pub;
     Histogram hi = new Histogram(TimeUnit.SECONDS.toNanos(10),3);
     Executor dumper = Executors.newCachedThreadPool();
 
@@ -29,46 +35,80 @@ public class EventPublisher {
         fastCast.setNodeId("PUB");
         fastCast.loadConfig("fc.kson");
 
-        pub = new ObjectPublisher(
-            fastCast.onTransport("default").publish("stream"),
-            MarketEvent.class
-        );
+        pub = fastCast.onTransport("default").publish("stream");
+        final FSTStruct msg = FSTStructFactory.getInstance().createEmptyStructPointer(FSTStruct.class);
+
 
         fastCast.onTransport("back").subscribe( "back",
-            new ObjectSubscriber(false,MarketEvent.class) {
-                @Override
-                protected void objectReceived(String s, long l, Object o) {
-                    if ( "END".equals(o) ) {
-                        Histogram oldHi = hi;
-                        hi = new Histogram(TimeUnit.SECONDS.toNanos(10),3);
-                        dumper.execute( () -> oldHi.outputPercentileDistribution(System.out,1000.0) );
-//                        hi.reset();
-                        return;
+        new FCSubscriber() {
+            @Override
+            public void messageReceived(String sender, long sequence, Bytez b, long off, int len) {
+                // as structs decode literally in zero time, we can decode inside receiver thread
+                msg.baseOn(b, (int) off);
+                Class type = msg.getPointedClass();
+                if ( type == StructString.class ) {
+                    // sequence end, print histogram
+                    final Histogram oldHi = hi;
+                    hi = new Histogram(TimeUnit.SECONDS.toNanos(2),3);
+                    // no lambdas to stay 1.7 compatible
+                    // move printing out of the receiving thread
+                    dumper.execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            oldHi.outputPercentileDistribution(System.out,1000.0);
+                        }
+                    });
+                } else { // a regular message, record latency
+                    MarketEventStruct mdata = msg.cast();
+                    long value = System.nanoTime() - mdata.getSendTimeStampNanos();
+                    if ( value < 1_000_000_000 ) { // avoid AIOB during init + JITTING
+                        hi.recordValue(value);
                     }
-                    hi.recordValue(System.nanoTime()-((MeasuredEvent)o).getSendTimeStampNanos());
+                    // a real app would need to copy the message (recycle byte arrays/objects !) and
+                    // run msg processing in an executor to get out of the receiving thread.
+                    // mdata gets invalid on finish of this method
                 }
+            }
 
-                @Override
-                public boolean dropped() {
-                    System.exit(-2);
-                    return false;
-                }
-            });
+            @Override
+            public boolean dropped() {
+                return false;
+            }
 
+            @Override
+            public void senderTerminated(String senderNodeId) {
+
+            }
+
+            @Override
+            public void senderBootstrapped(String receivesFrom, long seqNo) {
+
+            }
+        });
     }
 
-    public void run( IntFunction messageGenerator, int pauseNanos, int numEvents ) throws Throwable {
+    public void run( int pauseNanos, int numEvents ) throws Throwable {
         RateMeasure report = new RateMeasure("send rate");
+        MarketEventStruct struct = (MarketEventStruct) new MarketEventStruct().toOffHeap();
+        Bytez end = new StructString("END").toOffHeap().getBase();
         for ( int i = 0; i < numEvents; i++ ) {
-            Object event = messageGenerator.apply(i);
-            pub.sendObject( null, event, true );
+            double bidPrc = Math.random() * 10;
+            struct.setBidPrc(bidPrc);
+            struct.setAskPrc(bidPrc + 1);
+            struct.setAskQty(10);
+            struct.setBidQty(11);
+            while( ! pub.offer( null, struct.getBase(), true ) ) {
+                // spin
+            }
             report.count();
             long time = System.nanoTime();
             while( System.nanoTime() - time < pauseNanos ) {
                 // spin
             }
         }
-        pub.sendObject(null,"END", true);
+        while( ! pub.offer(null, end, true) ) {
+            // spin
+        }
     }
 
     public MarketEvent createMarketEvent(int i) {
@@ -81,7 +121,7 @@ public class EventPublisher {
 
         pub.initFastCast();
         while (true)
-            pub.run( pub::createMarketEvent, 27_000, 1_000_000 ); // 93_000 = 10k, 27_000 = 30k, 10_500 = 70k, 4_900 = 140k
+            pub.run( 27_000, 1_000_000 ); // 93_000 = 10k, 27_000 = 30k, 10_500 = 70k, 4_900 = 140k
 
     }
 
