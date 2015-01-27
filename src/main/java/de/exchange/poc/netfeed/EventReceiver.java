@@ -1,5 +1,7 @@
 package de.exchange.poc.netfeed;
 
+import com.espertech.esper.client.*;
+import de.exchange.poc.MarketDataEvent;
 import org.HdrHistogram.Histogram;
 import org.nustaq.fastcast.api.FCPublisher;
 import org.nustaq.fastcast.api.FCSubscriber;
@@ -8,6 +10,8 @@ import org.nustaq.fastcast.api.util.ObjectPublisher;
 import org.nustaq.fastcast.api.util.ObjectSubscriber;
 import org.nustaq.fastcast.util.RateMeasure;
 import org.nustaq.offheap.bytez.Bytez;
+import org.nustaq.offheap.structs.FSTStruct;
+import org.nustaq.offheap.structs.unsafeimpl.FSTStructFactory;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -26,6 +30,38 @@ public class EventReceiver {
     StupidPool pool = new StupidPool(2048);
     Executor bounceBackExec = Executors.newSingleThreadExecutor();
 
+
+    private EPServiceProvider epService;
+    public static class RateStatement
+    {
+        private EPStatement statement;
+
+        public RateStatement(EPAdministrator admin)
+        {
+            String stmt = "insert into TicksPerSecond " +
+                    "select count(*) as cnt from MarketDataEvent.win:time_batch(1 sec) group by symbol";
+
+            statement = admin.createEPL(stmt);
+        }
+
+        public void addListener(UpdateListener listener)
+        {
+            statement.addListener(listener);
+        }
+    }
+
+    public void initEsper() {
+        // Configure engine with event names to make the statements more readable.
+        // This could also be done in a configuration file.
+        Configuration configuration = new Configuration();
+        configuration.addEventType("MarketEventStruct", MarketEventStruct.class.getName());
+
+        // Get engine instance
+        epService = EPServiceProviderManager.getProvider("Marketfeed", configuration);
+
+
+    }
+
     public void initFastCast() throws Exception {
         fastCast =  FastCast.getFastCast();
         fastCast.setNodeId("SUB");
@@ -35,48 +71,51 @@ public class EventReceiver {
 
         RateMeasure measure = new RateMeasure("receive rate");
         fastCast.onTransport("default").subscribe("stream",
-                new FCSubscriber() {
-                    @Override
-                    public void messageReceived(String sender, long sequence, Bytez b, long off, final int len) {
-                        measure.count();
-                        final byte copy[] = pool.getBA();
-                        if ( len < copy.length ) // prevent segfault :) !
-                        {
-                            b.getArr(off,copy,0,len);
-                            // do bounce back in different thread, else blocking on send will pressure back to
-                            // sender resulting in whacky behaviour+throughput
-                            bounceBackExec.execute(new Runnable() {
-                                @Override
-                                public void run() {
-                                    while( ! backPub.offer(null,copy,0,len,true) ) {
-                                        // spin
-                                    }
-                                    pool.returnBA(copy); // give back to pool
+            new FCSubscriber() {
+                @Override
+                public void messageReceived(String sender, long sequence, Bytez b, long off, final int len) {
+                    measure.count();
+                    final byte copy[] = pool.getBA();
+                    if ( len < copy.length ) // prevent segfault :) !
+                    {
+//                        b.getArr(off,copy,0,len);
+                        final MarketEventStruct msg = (MarketEventStruct) FSTStructFactory.getInstance().createStructWrapper(b, off).createCopy();
+                        // do bounce back in different thread, else blocking on send will pressure back to
+                        // sender resulting in whacky behaviour+throughput
+                        bounceBackExec.execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                epService.getEPRuntime().sendEvent(msg);
+                                while( ! backPub.offer(null,copy,0,len,true) ) {
+                                    // spin
                                 }
-                            });
-                        } else {
-                            throw new RuntimeException("was soll das ?");
-                        }
-                    }
-
-                    @Override
-                    public boolean dropped() {
-                        // fatal, exit
-                        System.out.println("process dropped ");
-                        System.exit(-1);
-                        return false;
-                    }
-
-                    @Override
-                    public void senderTerminated(String senderNodeId) {
-
-                    }
-
-                    @Override
-                    public void senderBootstrapped(String receivesFrom, long seqNo) {
-
+                                
+//                                pool.returnBA(copy); // give back to pool
+                            }
+                        });
+                    } else {
+                        throw new RuntimeException("was soll das ?");
                     }
                 }
+
+                @Override
+                public boolean dropped() {
+                    // fatal, exit
+                    System.out.println("process dropped ");
+                    System.exit(-1);
+                    return false;
+                }
+
+                @Override
+                public void senderTerminated(String senderNodeId) {
+
+                }
+
+                @Override
+                public void senderBootstrapped(String receivesFrom, long seqNo) {
+
+                }
+            }
         );
     }
 

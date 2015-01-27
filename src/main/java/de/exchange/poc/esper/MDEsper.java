@@ -33,7 +33,14 @@ public class MDEsper {
         });
 
         TicksPerSecondStatement tickPerSecStmt = new TicksPerSecondStatement(epService.getEPAdministrator());
-        tickPerSecStmt.addListener(new RateReportingListener());
+        tickPerSecStmt.addListener(new UpdateListener() {
+            @Override
+            public void update(EventBean[] eventBeans, EventBean[] eventBeans1) {
+                if ( eventBeans.length == 1 ) {
+                    System.out.println( "Esper Rate Report "+eventBeans[0].get("cnt") );
+                }
+            }
+        });
 
         final Histogram histo = new Histogram(TimeUnit.SECONDS.toNanos(10),5);
 

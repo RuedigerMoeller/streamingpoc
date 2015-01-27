@@ -97,6 +97,7 @@ public class RTTClient {
 
                 row.startRow();
                 row.setOperation(Operation.INSERT);
+
                 row.setLong(System.nanoTime());
                 row.setDouble(3.124);
                 row.setDouble(3.555);
