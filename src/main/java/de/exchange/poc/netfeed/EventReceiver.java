@@ -57,7 +57,7 @@ public class EventReceiver {
 
         public EmptyStatement(EPAdministrator admin)
         {
-            String stmt = "select * from MarketDataEvent";
+            String stmt = "select * from MarketEvent";
 
             statement = admin.createEPL(stmt);
         }
@@ -77,15 +77,15 @@ public class EventReceiver {
         // Get engine instance
         epService = EPServiceProviderManager.getProvider("MarketEvent", configuration);
 
-        RateStatement tickPerSecStmt = new RateStatement(epService.getEPAdministrator());
-        tickPerSecStmt.addListener(new UpdateListener() {
-            @Override
-            public void update(EventBean[] eventBeans, EventBean[] eventBeans1) {
-                if ( eventBeans.length == 1 ) {
-                    System.out.println( "Esper Rate Report "+eventBeans[0].get("cnt") );
-                }
-            }
-        });
+//        RateStatement tickPerSecStmt = new RateStatement(epService.getEPAdministrator());
+//        tickPerSecStmt.addListener(new UpdateListener() {
+//            @Override
+//            public void update(EventBean[] eventBeans, EventBean[] eventBeans1) {
+//                if ( eventBeans.length == 1 ) {
+//                    System.out.println( "Esper Rate Report "+eventBeans[0].get("cnt") );
+//                }
+//            }
+//        });
 
         EmptyStatement emptyStatement = new EmptyStatement(epService.getEPAdministrator());
         emptyStatement.addListener(new UpdateListener() {
@@ -143,14 +143,7 @@ public class EventReceiver {
 //                        bounceBackExec.execute(new Runnable() {
 //                            @Override
 //                            public void run() {
-//
 //                                epService.getEPRuntime().sendEvent(ev);
-//
-//                                while( ! backPub.offer(null,copy,0,len,true) ) {
-//                                    // spin
-//                                }
-//
-//                                pool.returnBA(copy); // give back to pool
 //                            }
 //                        });
                     } else { // assume "END"
