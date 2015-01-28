@@ -31,6 +31,8 @@ public class EventPublisher {
     Executor dumper = Executors.newCachedThreadPool();
 
     public void initFastCast() throws Exception {
+        FSTStructFactory.getInstance().registerClz(MarketEventStruct.class);
+
         fastCast =  FastCast.getFastCast();
         fastCast.setNodeId("PUB");
         fastCast.loadConfig("fc.kson");
