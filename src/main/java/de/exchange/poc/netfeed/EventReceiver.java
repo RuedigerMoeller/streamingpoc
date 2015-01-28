@@ -2,6 +2,7 @@ package de.exchange.poc.netfeed;
 
 import com.espertech.esper.client.*;
 import de.exchange.poc.MarketDataEvent;
+import de.exchange.poc.esper.TicksPerSecondStatement;
 import org.HdrHistogram.Histogram;
 import org.nustaq.fastcast.api.FCPublisher;
 import org.nustaq.fastcast.api.FCSubscriber;
@@ -39,7 +40,24 @@ public class EventReceiver {
         public RateStatement(EPAdministrator admin)
         {
             String stmt = "insert into TicksPerSecond " +
-                    "select count(*) as cnt from MarketDataEvent.win:time_batch(1 sec) group by symbol";
+                    "select count(*) as cnt from MarketEvent.win:time_batch(1 sec)";
+
+            statement = admin.createEPL(stmt);
+        }
+
+        public void addListener(UpdateListener listener)
+        {
+            statement.addListener(listener);
+        }
+    }
+
+    public static class EmptyStatement
+    {
+        private EPStatement statement;
+
+        public EmptyStatement(EPAdministrator admin)
+        {
+            String stmt = "select * from MarketDataEvent";
 
             statement = admin.createEPL(stmt);
         }
@@ -54,20 +72,51 @@ public class EventReceiver {
         // Configure engine with event names to make the statements more readable.
         // This could also be done in a configuration file.
         Configuration configuration = new Configuration();
-        configuration.addEventType("MarketEventStruct", MarketEventStruct.class.getName());
+        configuration.addEventType("MarketEvent", MarketEvent.class.getName());
 
         // Get engine instance
-        epService = EPServiceProviderManager.getProvider("Marketfeed", configuration);
+        epService = EPServiceProviderManager.getProvider("MarketEvent", configuration);
 
+        RateStatement tickPerSecStmt = new RateStatement(epService.getEPAdministrator());
+        tickPerSecStmt.addListener(new UpdateListener() {
+            @Override
+            public void update(EventBean[] eventBeans, EventBean[] eventBeans1) {
+                if ( eventBeans.length == 1 ) {
+                    System.out.println( "Esper Rate Report "+eventBeans[0].get("cnt") );
+                }
+            }
+        });
+
+        EmptyStatement emptyStatement = new EmptyStatement(epService.getEPAdministrator());
+        emptyStatement.addListener(new UpdateListener() {
+            @Override
+            public void update(EventBean[] eventBeans, EventBean[] eventBeans1) {
+                if ( eventBeans.length == 1 ) {
+                    MarketEvent ev = (MarketEvent) eventBeans[0].getUnderlying();
+                    long nanos = ev.getSendTimeStampNanos();
+                    backBuf.setSendTimeStampNanos(nanos);
+                    byte[] bytes = backBuf.getBase().asByteArray();
+                    while( ! backPub.offer(null, bytes,0,backBuf.getByteSize(),true) ) {
+                        // spin
+                    }
+                }
+            }
+        });
 
     }
 
+    MarketEventStruct backBuf;
     public void initFastCast() throws Exception {
+        FSTStructFactory.getInstance().registerClz(MarketEventStruct.class);
+        backBuf = (MarketEventStruct) new MarketEventStruct().toOffHeap();
+
         fastCast =  FastCast.getFastCast();
         fastCast.setNodeId("SUB");
         fastCast.loadConfig("fc.kson");
 
         backPub = fastCast.onTransport("back").publish("back");
+
+        final MarketEventStruct msg = (MarketEventStruct) FSTStructFactory.getInstance().createEmptyStructPointer(MarketEventStruct.class);
 
         RateMeasure measure = new RateMeasure("receive rate");
         fastCast.onTransport("default").subscribe("stream",
@@ -75,26 +124,39 @@ public class EventReceiver {
                 @Override
                 public void messageReceived(String sender, long sequence, Bytez b, long off, final int len) {
                     measure.count();
-                    final byte copy[] = pool.getBA();
-                    if ( len < copy.length ) // prevent segfault :) !
+//                    final byte copy[] = pool.getBA();
+//                    if ( len < copy.length ) // prevent segfault :) !
+                    Class msgClass = FSTStructFactory.getInstance().getStructPointer(b, off).getPointedClass();
+                    if ( msgClass == MarketEventStruct.class )
                     {
-//                        b.getArr(off,copy,0,len);
-                        final MarketEventStruct msg = (MarketEventStruct) FSTStructFactory.getInstance().createStructWrapper(b, off).createCopy();
+                        msg.baseOn(b,(int)off); // fixme could avoid pooling as event is read here ..
+                        final MarketEvent ev = new MarketEvent(
+                            msg.getSendTimeStampNanos(),
+                            msg.getBidPrc(),
+                            msg.getAskPrc(),
+                            msg.getBidQty(),
+                            msg.getAskQty()
+                        );
+                        epService.getEPRuntime().sendEvent(ev);
                         // do bounce back in different thread, else blocking on send will pressure back to
                         // sender resulting in whacky behaviour+throughput
-                        bounceBackExec.execute(new Runnable() {
-                            @Override
-                            public void run() {
-                                epService.getEPRuntime().sendEvent(msg);
-                                while( ! backPub.offer(null,copy,0,len,true) ) {
-                                    // spin
-                                }
-                                
+//                        bounceBackExec.execute(new Runnable() {
+//                            @Override
+//                            public void run() {
+//
+//                                epService.getEPRuntime().sendEvent(ev);
+//
+//                                while( ! backPub.offer(null,copy,0,len,true) ) {
+//                                    // spin
+//                                }
+//
 //                                pool.returnBA(copy); // give back to pool
-                            }
-                        });
-                    } else {
-                        throw new RuntimeException("was soll das ?");
+//                            }
+//                        });
+                    } else { // assume "END"
+                        while( ! backPub.offer(null,b,off,len,true) ) {
+                            // spin
+                        }
                     }
                 }
 
@@ -162,6 +224,7 @@ public class EventReceiver {
     public static void main(String arg[]) throws Throwable {
         EventReceiver rec = new EventReceiver();
 
+        rec.initEsper();
         rec.initFastCast();
         while( true )
             Thread.sleep(10_000_000l);
