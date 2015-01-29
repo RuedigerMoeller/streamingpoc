@@ -89,15 +89,19 @@ public class EventReceiver {
 
         EmptyStatement emptyStatement = new EmptyStatement(epService.getEPAdministrator());
         emptyStatement.addListener(new UpdateListener() {
+            int count = 0;
             @Override
             public void update(EventBean[] eventBeans, EventBean[] eventBeans1) {
                 if ( eventBeans.length == 1 ) {
-                    MarketEvent ev = (MarketEvent) eventBeans[0].getUnderlying();
-                    long nanos = ev.getSendTimeStampNanos();
-                    backBuf.setSendTimeStampNanos(nanos);
-                    byte[] bytes = backBuf.getBase().asByteArray();
-                    while( ! backPub.offer(null, bytes,0,backBuf.getByteSize(),true) ) {
-                        // spin
+                    if ( ++count == 10 ) {
+                        count = 0;
+                        MarketEvent ev = (MarketEvent) eventBeans[0].getUnderlying();
+                        long nanos = ev.getSendTimeStampNanos();
+                        backBuf.setSendTimeStampNanos(nanos);
+                        byte[] bytes = backBuf.getBase().asByteArray();
+                        while (!backPub.offer(null, bytes, 0, backBuf.getByteSize(), true)) {
+                            // spin
+                        }
                     }
                 }
             }
