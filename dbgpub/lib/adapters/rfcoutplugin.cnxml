@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Adapter type="output" external="true"
+  id="rfcoutplugin"
+  label="SAP RFC Output (external)"
+  descr="Writes data to SAP systems using RFC"
+>
+  <Library file="simple_ext" type="binary"/>
+  
+  <Special>
+    <Internal id="x_initialOnly" 
+      label="Does Initial Loading Only" 
+      descr="Do initial loading, or the continuous loading"
+      type="boolean"
+      default="false"
+    />
+    <Internal id="x_addParamFile" 
+      label="Add Parameter File" 
+      type="boolean"
+      default="false"
+    />
+    <Internal id="x_killRetryPeriod" 
+      label="Period to repeat the stop command until the process exits" 
+      type="int"
+      default="0"
+    />
+	<Internal id="x_allocateLocalSessionId" 
+      label="Request a new local session id"
+      descr="Request the project to allocate a new local session id. Then, the adapter could connect to the project using the new local session id depending on the adapter's choice"	  
+      type="boolean"
+      default="true"
+    />
+
+    <!-- 
+	Start the out-of-process SAP RFC Output Adapter.
+    -->
+    <Internal id="x_unixCmdExec" 
+      label="Execute Command" 
+      type="string"
+      default="&quot;$ESP_HOME/adapters/rfc/bin/start.sh&quot; &quot;$config&quot;"
+    />
+    
+    <Internal id="x_winCmdExec" 
+      label="Execute Command" 
+      type="string"
+      default="&quot;%ESP_HOME%\\adapters\\rfc\\bin\\start.bat&quot; &quot;$config&quot;"
+    />
+
+    <Internal id="x_unixCmdStop" 
+      label="Stop Command" 
+      type="string"
+      default="&quot;$ESP_HOME/adapters/rfc/bin/immediatestop.sh&quot; &quot;$config&quot;"
+    />
+    <Internal id="x_winCmdStop" 
+      label="Stop Command" 
+      type="string"
+      default="&quot;%ESP_HOME%\\adapters\\rfc\\bin\\immediatestop.bat&quot; &quot;$config&quot;"
+    />
+  </Special>
+  
+ <Section>
+    <!-- These parameters show up in the Sybase ESP Studio properties dialog -->
+    <Parameter id="config"
+	       label="Adapter Configuration File"
+	       descr="Path to the Adapter configuration xml file"
+	       type="filename"
+	       use="required"
+	  />
+	      <Parameter id="mapFilePath"
+	       label="Adapter Mapping File"
+	       descr="Path and name of Adapter mapping xml file"
+	       type="filename"
+	       use="optional"
+	  />	
+    <Parameter id="host"
+      label="SAP host"
+      descr="Host name or IP address of the SAP server for discovery"
+      type="string"
+      use="optional"
+      default="localhost"
+    />
+    <Parameter id="systemNumber"
+      label="SAP System number"
+      descr="System number/Instance number of the SAP server for discovery"
+      type="string"
+      use="optional"
+      default="00"
+    />
+    <Parameter id="client"
+      label="SAP client"
+      descr="Client number for connecting to SAP server for discovery"
+      type="string"
+      use="optional"
+      default="000"
+    />
+    <Parameter id="user"
+      label="Username"
+      descr="User for SAP system for discovery"
+      type="string"
+      use="optional"
+      default="user"
+    />
+    <Parameter id="password"
+      label="Password"
+      descr="Password for SAP system for discovery"
+      type="password"
+      use="optional"
+      default=""
+    />
+	  <Parameter id="propertyset" 
+	      label="propertyset" 
+	      descr="to look up properties in project configuration"
+	      type="string"
+	      use="advanced"
+      	      default=""
+    />  
+  </Section>
+</Adapter>

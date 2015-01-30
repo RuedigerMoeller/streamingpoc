@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Adapter type="output" external="true"
+  id="toolkit_http_output"
+  label="HTTP Client Output Adapter"
+  descr="Writes XML-formatted data to a file"
+>
+  <Library file="simple_ext" type="binary"/>
+  
+  <Special>
+    <Internal id="x_initialOnly" 
+      label="Does Initial Loading Only" 
+      descr="Do initial loading, or the continuous loading"
+      type="boolean"
+      default="false"
+    />
+    <Internal id="x_addParamFile" 
+      label="Add Parameter File" 
+      type="boolean"
+      default="false"
+    />
+    <Internal id="x_killRetryPeriod" 
+      label="Period to repeat the stop command until the process exits" 
+      type="int"
+      default="0"
+    />
+	<Internal id="x_allocateLocalSessionId" 
+      label="Request a new local session id"
+      descr="Request the project to allocate a new local session id. Then, the adapter could connect to the project using the new local session id depending on the adapter's choice"	  
+      type="boolean"
+      default="true"
+    />
+
+    <!-- 
+	Start the out-of-process Sybase ESP Adapter.
+    -->
+    <Internal id="x_unixCmdExec" 
+      label="Execute Command" 
+      type="string"
+	  default="&quot;$ESP_HOME/adapters/framework/bin/start.sh&quot; &quot;$ESP_HOME/adapters/framework/instances/http_output/adapter_config.xml&quot; &quot;-DHttpOutputTransporterParameters.ProxyHost=$proxyHost&quot; &quot;-DHttpOutputTransporterParameters.ProxyPort=$proxyPort&quot; &quot;-DHttpOutputTransporterParameters.BodyCharset=$bodyCharset&quot; &quot;-DHttpOutputTransporterParameters.RetryNumber=$retryNumber&quot; &quot;-DHttpOutputTransporterParameters.UrlColumn=$urlColumn&quot; &quot;-DHttpOutputTransporterParameters.UsernameColumn=$usernameColumn&quot; &quot;-DHttpOutputTransporterParameters.PasswordColumn=$passwordColumn&quot; &quot;-DHttpOutputTransporterParameters.BodyColumn=$bodyColumn&quot; &quot;-DHttpOutputTransporterParameters.RequestUrl=$requestUrl&quot; &quot;-DHttpOutputTransporterParameters.RequestUsername=$requestUsername&quot; &quot;-DHttpOutputTransporterParameters.RequestPassword=$requestPassword&quot; &quot;-DHttpOutputTransporterParameters.RequestBody=$requestBody&quot; &quot;-DHttpOutputTransporterParameters.RequestPassword[@encrypted]=$encrypted&quot; &quot;-DHttpOutputTransporterParameters.RSAKeyStore=$rsaKeyStore&quot; &quot;-DHttpOutputTransporterParameters.RSAKeyStorePassword=$rsaKeyStorePassword&quot; &quot;-DHttpOutputTransporterParameters.RSAKeyStoreAlias=$rsaKeyStoreAlias&quot;"
+    />
+    
+    <Internal id="x_winCmdExec" 
+      label="Execute Command" 
+      type="string"
+	  default="&quot;$ESP_HOME/adapters/framework/bin/start.bat&quot; &quot;$ESP_HOME/adapters/framework/instances/http_output/adapter_config.xml&quot; &quot;-DHttpOutputTransporterParameters.ProxyHost=$proxyHost&quot; &quot;-DHttpOutputTransporterParameters.ProxyPort=$proxyPort&quot; &quot;-DHttpOutputTransporterParameters.BodyCharset=$bodyCharset&quot; &quot;-DHttpOutputTransporterParameters.RetryNumber=$retryNumber&quot; &quot;-DHttpOutputTransporterParameters.UrlColumn=$urlColumn&quot; &quot;-DHttpOutputTransporterParameters.UsernameColumn=$usernameColumn&quot; &quot;-DHttpOutputTransporterParameters.PasswordColumn=$passwordColumn&quot; &quot;-DHttpOutputTransporterParameters.BodyColumn=$bodyColumn&quot; &quot;-DHttpOutputTransporterParameters.RequestUrl=$requestUrl&quot; &quot;-DHttpOutputTransporterParameters.RequestUsername=$requestUsername&quot; &quot;-DHttpOutputTransporterParameters.RequestPassword=$requestPassword&quot; &quot;-DHttpOutputTransporterParameters.RequestBody=$requestBody&quot; &quot;-DHttpOutputTransporterParameters.RequestPassword[@encrypted]=$encrypted&quot; &quot;-DHttpOutputTransporterParameters.RSAKeyStore=$rsaKeyStore&quot; &quot;-DHttpOutputTransporterParameters.RSAKeyStorePassword=$rsaKeyStorePassword&quot; &quot;-DHttpOutputTransporterParameters.RSAKeyStoreAlias=$rsaKeyStoreAlias&quot;"
+	
+	/>
+    <Internal id="x_unixCmdStop" 
+      label="Stop Command" 
+      type="string"
+	  default="&quot;$ESP_HOME/adapters/framework/bin/stop.sh&quot; &quot;$ESP_HOME/adapters/framework/instances/http_output/adapter_config.xml&quot;"
+    />
+    <Internal id="x_winCmdStop" 
+      label="Stop Command" 
+      type="string"
+	  default="&quot;$ESP_HOME/adapters/framework/bin/stop.bat&quot; &quot;$ESP_HOME/adapters/framework/instances/http_output/adapter_config.xml&quot;"
+    />
+  </Special>
+  
+  <Section>
+    <!-- These parameters show up in the Sybase ESP Studio properties dialog-->
+    <Parameter id="proxyHost"
+         label="Proxy Host" 
+         descr="Specify the proxy host"
+         type="string"
+	       use="advanced"
+	       />
+	<Parameter id="proxyPort"
+         label="Proxy Port" 
+	       descr="Specify the proxy port"
+	       type="int"
+	       use="advanced"
+	       />
+	<Parameter id="bodyCharset"
+	       label="BodyCharset"
+	       descr="Specify the name of a supported charset. The default value is US-ASCII"
+	       type="string"
+	       use="optional"
+	       />   
+	<Parameter id="retryNumber"
+			label="Retry Count"
+			descr="The number of times to try to reconnect to the HTTP server if you disconnect unexpectedly"
+			type="int"
+			use="optional"
+	/>
+	<Parameter id="urlColumn"
+	       label="URL column index"
+	       descr="Specify the URL column index of the ESP stream to which the adapter is attached. This property is required if RequestUrl is empty."
+	       type="int"
+	       use="optional"
+	       />
+	<Parameter id="usernameColumn"
+	       label="Username Column Index "
+	       descr="Specify the username column index of the ESP stream "
+	       type="int"
+	       use="optional"
+	       />
+	<Parameter id="passwordColumn" 
+		  label="Password Column Index" 
+		  descr="Specify the body column index of the ESP stream"
+		  type="int"
+		  use="optional"
+		  />
+	<Parameter id="bodyColumn"
+	       label="Body Column Index "
+	       descr="Specify the body column index of the ESP stream "
+	       type="int"
+	       use="optional"
+	       />	  
+	<Parameter id="requestUrl"
+	       label="Request Url"
+	       descr="Specify the request URL while the URL cannot get from ESP stream."
+	       type="string"
+	       use="optional"
+	       />
+		    
+	<Parameter id="requestUsername"
+	       label="Request Username"
+	       descr="Specify the request Username while the Username cannot get from ESP stream."
+	       type="string"
+	       use="optional"
+	       />
+		     
+	<Parameter id="requestPassword"
+	       label="Request Password"
+	       descr="Specify the request Password while the Password cannot get from ESP stream."
+	       type="string"
+	       use="optional"
+	       />
+		 
+	<Parameter id="requestBody"
+	       label="Request Body"
+	       descr="Specify the request Body while the Body cannot get from ESP stream."
+	       type="string"
+	       use="optional"
+	       />
+
+	<Parameter id="encrypted"
+	       label="Request Password Encrypted"
+	       descr="Specify whether the password value is encrypted. If set to true, the password value is decrypted using the RSA Key Store, RSA Key Store Password, and RSA Key Store Alias parameters."
+	       type="boolean"
+	       use="advanced"
+	       />
+	  
+	<Parameter id="rsaKeyStore"
+	       label="RSA Key Store"
+	       descr="File path for RSA key store"
+	       type="filename"
+	       use="advanced"
+	       />
+	<Parameter id="rsaKeyStorePassword"
+	       label="RSA Key Store Password"
+	       descr="RSA key store Password"
+	       type="string"
+	       use="advanced"
+	       />
+	<Parameter id="rsaKeyStoreAlias"
+	       label="Alias in RSA Key Store"
+	       descr="An alias stored in the RSA Key Store"
+	       type="string"
+	       use="advanced"
+	       />
+	<Parameter id="propertyset" 
+	      label="propertyset" 
+	      descr="to look up properties in project configuration"
+	      type="string"
+	      use="advanced"
+      	  default=""
+      	 />
+	 
+  </Section>
+</Adapter>

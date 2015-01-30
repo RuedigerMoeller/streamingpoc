@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Adapter type="input"
+  id="fixsocket_in"
+  label="Socket FIX Input"
+  descr="Reads FIX messages from a socket"
+>
+  <Library file="fix_in" type="binary"/>
+  <Special>
+    <Internal id="sourceType" 
+      label="Source Type" 
+      type="string"
+      default="socket"
+    />
+  </Special>
+  <Section>
+    <Parameter id="fixVersion" 
+      label="FIX Version" 
+      descr="FIX version"
+      type="choice"
+      use="required"
+      default="4.2">
+      <ValueList>
+        <Value value="4.2" label="4.2"/>
+        <Value value="4.3" label="4.3"/>
+		<Value value="4.4" label="4.4"/>
+		<Value value="5.0" label="5.0"/>
+      </ValueList>
+    </Parameter>
+    <Parameter id="fixMessageType" 
+      label="FIX Message Type" 
+      descr="FIX message type"
+      type="string"
+      use="required"
+    />
+    <Parameter id="fixHost" 
+      label="Source Host" 
+      descr="Source host for FIX messages"
+      type="string"
+      use="required"
+      default="localhost"
+    />
+    <Parameter id="fixPort" 
+      label="Source Port" 
+      descr="Source port for FIX messages"
+      type="uint"
+      use="required"
+      default="12345"
+    />
+    <Parameter id="reconnectInterval" 
+      label="Reconnect Interval" 
+      descr="Reconnect interval, in seconds. 0 if never try to reconnect"
+      type="uint"
+      use="required"
+      default="10"
+    />
+    <Parameter id="maxReconnectAttempts" 
+      label="Maximum Reconnect Attempts" 
+      descr="Maximum number of reconnect attempts. 0 to keep trying forever"
+      type="uint"
+      use="required"
+      default="0"
+    />
+    <Parameter id="dateFormat" 
+      label="Date Format" 
+      descr="Date format"
+      type="string"
+      use="advanced"
+      default="%Y%m%d-%H:%M:%S"
+    />
+    <Parameter id="timestampFormat" 
+      label="Timestamp Format" 
+      descr="Timestamp format"
+      type="string"
+      use="advanced"
+      default="%Y%m%d-%H:%M:%S"
+    />
+	<Parameter id="timeFormat"
+	  label="Time Format"
+	  descr="Time format"
+	  type="string"
+	  use="advanced"
+	  default="%H:%M:%S"
+	/>
+	<Parameter id="propertyset" 
+      label="propertyset" 
+      descr="to look up properties in project configuration"
+      type="string"
+      use="advanced"
+      default=""/>  
+  </Section>
+</Adapter>

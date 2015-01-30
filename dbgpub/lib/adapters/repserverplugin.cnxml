@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Adapter type="input" external="true"
+  id="repserverplugin"
+  label="Replication Server Input (external)"
+  descr="Reads data from Sybase Replication Server"
+>
+  <Library file="simple_ext" type="binary"/>
+  
+  <Special>
+    <Internal id="x_initialOnly" 
+      label="Does Initial Loading Only" 
+      descr="Do initial loading, or the continuous loading"
+      type="boolean"
+      default="false"
+    />
+    <Internal id="x_addParamFile" 
+      label="Add Parameter File" 
+      type="boolean"
+      default="false"
+    />
+    <Internal id="x_killRetryPeriod" 
+      label="Period to repeat the stop command until the process exits" 
+      type="int"
+      default="0"
+    />
+
+    <!-- 
+	Start the out-of-process Sybase ESP Adapter for Replication Server.
+    -->
+    <Internal id="x_unixCmdExec" 
+      label="Execute Command" 
+      type="string"
+      default="&quot;$JAVA_HOME/bin/java&quot; -classpath &quot;$ESP_HOME/adapters/repserver/libj/esp_adapter_repserver.jar:$ESP_HOME/adapters/repserver/libj/jconn4.jar:$ESP_HOME/adapters/repserver/libj/jTDS3.jar:$ESP_HOME/adapters/repserver/libj/commons-logging-1.1.jar:$ESP_HOME/adapters/repserver/libj/esp_adapter_api.jar:$ESP_HOME/adapters/repserver/libj/esp_sdk.jar:$ESP_HOME/adapters/repserver/libj/commons-codec-1.3.jar:$ESP_HOME/adapters/repserver/libj/postgresql.jar:$ESP_HOME/adapters/repserver/config:$ESP_HOME/adapters/repserver/libj/log4j-1.2.16.jar:$ESP_HOME/adapters/repserver/libj/esp_i18n.jar&quot; &quot;-DESP_ADAPTER_HOME=$ESP_HOME/adapters/repserver&quot; -Dpid=$$ -DplatformUser=$adminUser -DplatformPasswd=$adminPasswd -DtdsListenerPort=$tdsListenerPort -DtdsSslListenerPort=$tdsSslListenerPort -DkeyStore=$keyStore -DkeyStorePasswd=$keyStorePasswd -DplatformHost=$platformHost -DplatformCommandPort=$platformCommandPort -DplatformSsl=$platformSsl -DplatformSqlPort=$platformSqlPort -DplatformAuth=$platformAuth -DplatformStream=$platformStream -DplatformConnection=$platformConnection -Dtable=$tableName -Dpermutation=$permutation -DconnectorClientAuthType=Manual -DconnectorClientUserName=$adminUser -DconnectorClientPasswd=$adminPasswd -DrepClientAuthType=Manual -DrepConnUserName=$repConnUser -DrepConnPasswd=$repConnPasswd -DisTransactional=$isTransactional -DisBatched=$isBatched -DisAsync=$isAsync -DbatchSize=$batchSize -DpublishWhenBatchFull=$publishWhenBatchFull -DerrorOnMissingStreamColumn=$errorOnMissingStreamColumn -DstoredProcStreamOp=$storedProcStreamOp -DprojectUri=$projectUri -DespUser=$espUser -DespPassword=$espPassword -DauthType=$authType -DrsaKeyStore=$rsaKeyStore -DrsaKeyStorePassword=$rsaKeyStorePassword -DkerberosKdc=$kerberosKdc -DkerberosRealm=$kerberosRealm -DkerberosService=$kerberosService -DkerberosTicketCache=&quot;$kerberosTicketCache&quot; com.sybase.esp.adapter.repserver.Start"
+    />
+    
+    <Internal id="x_winCmdExec" 
+      label="Execute Command" 
+      type="string"
+      default="&quot;%JAVA_HOME%\\bin\\java&quot; -classpath &quot;%ESP_HOME%\\adapters\\repserver\\libj\\esp_adapter_repserver.jar;%ESP_HOME%\\adapters\\repserver\\libj\\jconn4.jar;%ESP_HOME%\\adapters\\repserver\\libj\\jTDS3.jar;%ESP_HOME%\\adapters\\repserver\\libj\\commons-logging-1.1.jar;%ESP_HOME%\\adapters\\repserver\\libj\\esp_adapter_api.jar;%ESP_HOME%\\adapters\\repserver\\libj\\esp_sdk.jar;%ESP_HOME%\\adapters\\repserver\\libj\\commons-codec-1.3.jar;%ESP_HOME%\\adapters\\repserver\\libj\\postgresql.jar;%ESP_HOME%\\adapters\\repserver\\config;%ESP_HOME%\\adapters\\repserver\\libj\\log4j-1.2.16.jar;%ESP_HOME%\\adapters\\repserver\\libj\\esp_i18n.jar&quot; &quot;-DESP_ADAPTER_HOME=%ESP_HOME%\\adapters\\repserver&quot; -DplatformUser=$adminUser -DplatformPasswd=$adminPasswd -DtdsListenerPort=$tdsListenerPort -DtdsSslListenerPort=$tdsSslListenerPort -DkeyStore=$keyStore -DkeyStorePasswd=$keyStorePasswd -DplatformHost=$platformHost -DplatformCommandPort=$platformCommandPort -DplatformSsl=$platformSsl -DplatformSqlPort=$platformSqlPort -DplatformAuth=$platformAuth -DplatformStream=$platformStream -DplatformConnection=$platformConnection -Dtable=$tableName -Dpermutation=$permutation -DconnectorClientAuthType=Manual -DconnectorClientUserName=$adminUser -DconnectorClientPasswd=$adminPasswd -DrepClientAuthType=Manual -DrepConnUserName=$repConnUser -DrepConnPasswd=$repConnPasswd -DisTransactional=$isTransactional -DisBatched=$isBatched -DisAsync=$isAsync -DbatchSize=$batchSize -DpublishWhenBatchFull=$publishWhenBatchFull -DerrorOnMissingStreamColumn=$errorOnMissingStreamColumn -DstoredProcStreamOp=$storedProcStreamOp -DprojectUri=$projectUri -DespUser=$espUser -DespPassword=$espPassword -DauthType=$authType -DrsaKeyStore=$rsaKeyStore -DrsaKeyStorePassword=$rsaKeyStorePassword -DkerberosKdc=$kerberosKdc -DkerberosRealm=$kerberosRealm -DkerberosService=$kerberosService -DkerberosTicketCache=&quot;$kerberosTicketCache&quot; com.sybase.esp.adapter.repserver.Start"
+    />
+
+    <Internal id="x_unixCmdStop" 
+      label="Stop Command" 
+      type="string"
+      default="&quot;$JAVA_HOME/bin/java&quot; -classpath &quot;$ESP_HOME/adapters/repserver/libj/esp_adapter_repserver.jar:$ESP_HOME/adapters/repserver/libj/jconn4.jar:$ESP_HOME/adapters/repserver/libj/commons-logging-1.1.jar:$ESP_HOME/adapters/repserver/libj/esp_adapter_api.jar:$ESP_HOME/adapters/repserver/config:$ESP_HOME/adapters/repserver/libj/log4j-1.2.16.jar:$ESP_HOME/adapters/repserver/libj/esp_i18n.jar&quot; &quot;-DESP_ADAPTER_HOME=$ESP_HOME/adapters/repserver&quot; -Dpid=$$ -DplatformUser=$adminUser -DplatformPasswd=$adminPasswd  -DtdsListenerPort=$tdsListenerPort -DplatformHost=$platformHost -DplatformCommandPort=$platformCommandPort -DplatformSsl=$platformSsl -DplatformSqlPort=$platformSqlPort -DplatformAuth=$platformAuth -DplatformStream=$platformStream -DplatformConnection=$platformConnection -Dtable=$tableName -DconnectorClientAuthType=Manual -DconnectorClientUserName=$adminUser -DconnectorClientPasswd=$adminPasswd -DrepClientAuthType=Manual -DrepConnUserName=$repConnUser -DrepConnPasswd=$repConnPasswd -DisTransactional=$isTransactional -DisBatched=$isBatched -DisAsync=$isAsync -DbatchSize=$batchSize -DpublishWhenBatchFull=$publishWhenBatchFull -DerrorOnMissingStreamColumn=$errorOnMissingStreamColumn -DstoredProcStreamOp=$storedProcStreamOp com.sybase.esp.adapter.repserver.Stop"
+    />
+    <Internal id="x_winCmdStop" 
+      label="Stop Command" 
+      type="string"
+      default="&quot;%JAVA_HOME%\\bin\\java&quot; -classpath &quot;%ESP_HOME%\\adapters\\repserver\\libj\\esp_adapter_repserver.jar;%ESP_HOME%\\adapters\\repserver\\libj\\jconn4.jar;%ESP_HOME%\\adapters\\repserver\\libj\\commons-logging-1.1.jar;%ESP_HOME%\\adapters\\repserver\\libj\\esp_adapter_api.jar;%ESP_HOME%\\adapters\\repserver\\config;%ESP_HOME%\\adapters\\repserver\\libj\\log4j-1.2.16.jar;%ESP_HOME%\\adapters\\repserver\\libj\\esp_i18n.jar&quot; &quot;-DESP_ADAPTER_HOME=%ESP_HOME%\\adapters\\repserver&quot; -DplatformUser=$adminUser -DplatformPasswd=$adminPasswd  -DtdsListenerPort=$tdsListenerPort -DplatformHost=$platformHost -DplatformCommandPort=$platformCommandPort -DplatformSsl=$platformSsl -DplatformSqlPort=$platformSqlPort -DplatformAuth=$platformAuth -DplatformStream=$platformStream -DplatformConnection=$platformConnection -Dtable=$tableName -DconnectorClientAuthType=Manual -DconnectorClientUserName=$adminUser -DconnectorClientPasswd=$adminPasswd -DrepClientAuthType=Manual -DrepConnUserName=$repConnUser -DrepConnPasswd=$repConnPasswd -DisTransactional=$isTransactional -DisBatched=$isBatched -DisAsync=$isAsync -DbatchSize=$batchSize -DpublishWhenBatchFull=$publishWhenBatchFull -DerrorOnMissingStreamColumn=$errorOnMissingStreamColumn -DstoredProcStreamOp=$storedProcStreamOp com.sybase.esp.adapter.repserver.Stop"
+    />
+
+    <!--
+	Data discovery. 
+	The command below will have '-o "<temp file>"' added to it. It 
+	will write the discovered data in this file.
+     -->
+    <Internal id="x_unixCmdDisc" 
+      label="Discovery Command" 
+      type="string"
+      default="&quot;$JAVA_HOME/bin/java&quot; -classpath &quot;$ESP_HOME/adapters/repserver/libj/esp_adapter_repserver.jar:$ESP_HOME/adapters/repserver/libj/commons-logging-1.1.jar:$ESP_HOME/adapters/repserver/libj/esp_adapter_api.jar:$ESP_HOME/adapters/repserver/libj/jconn4.jar:$ESP_HOME/adapters/repserver/config:$ESP_HOME/adapters/repserver/libj/log4j-1.2.16.jar:$ESP_HOME/adapters/repserver/libj/esp_i18n.jar&quot; &quot;-DESP_ADAPTER_HOME=$ESP_HOME/adapters/repserver&quot; -Dpid=$$ -DrssdHost=$rssdHost -DrssdPort=$rssdPort -DrssdUser=$rssdUser -DrssdPasswd=$rssdPasswd -DrssdDatabaseName=$rssdDatabaseName -DrepSubscriptionServer=$repSubscriptionServer -DrepSubscriptionDatabase=$repSubscriptionServer -DisTransactional=$isTransactional -DisBatched=$isBatched -DisAsync=$isAsync -DbatchSize=$batchSize -DpublishWhenBatchFull=$publishWhenBatchFull -DerrorOnMissingStreamColumn=$errorOnMissingStreamColumn -DstoredProcStreamOp=$storedProcStreamOp com.sybase.esp.adapter.repserver.Discover"
+    />
+    <Internal id="x_winCmdDisc" 
+      label="Discovery Command" 
+      type="string"
+      default="&quot;%JAVA_HOME%\\bin\\java&quot; -classpath &quot;%ESP_HOME%\\adapters\\repserver\\libj\\esp_adapter_repserver.jar;%ESP_HOME%\\adapters\\repserver\\libj\\commons-logging-1.1.jar;%ESP_HOME%\\adapters\\repserver\\libj\\esp_adapter_api.jar;%ESP_HOME%\\adapters\\repserver\\libj\\jconn4.jar;%ESP_HOME%\\adapters\\repserver\\config;%ESP_HOME%\\adapters\\repserver\\libj\\log4j-1.2.16.jar;%ESP_HOME%\\adapters\\repserver\\libj\\esp_i18n.jar&quot; &quot;-DESP_ADAPTER_HOME=%ESP_HOME%\\adapters\\repserver&quot; -DrssdHost=$rssdHost -DrssdPort=$rssdPort -DrssdUser=$rssdUser -DrssdPasswd=$rssdPasswd -DrssdDatabaseName=$rssdDatabaseName -DrepSubscriptionServer=$repSubscriptionServer -DrepSubscriptionDatabase=$repSubscriptionServer -DisTransactional=$isTransactional -DisBatched=$isBatched -DisAsync=$isAsync -DbatchSize=$batchSize -DpublishWhenBatchFull=$publishWhenBatchFull -DerrorOnMissingStreamColumn=$errorOnMissingStreamColumn -DstoredProcStreamOp=$storedProcStreamOp com.sybase.esp.adapter.repserver.Discover"
+    />
+  </Special>
+  
+  <Section>
+    <!-- These parameters show up in the Sybase ESP Studio properties dialog -->
+
+    <Parameter id="rssdHost"
+      label="RSSD host"
+      descr="Host name or IP address of the RSSD server. Required for Discovery"
+      type="string"
+      use="optional"
+      default="localhost"
+    />
+    <Parameter id="rssdPort"
+      label="RSSD port"
+      descr="RSSD server port. Required for Discovery"
+      type="uint"
+      use="optional"
+      default="5000"
+    />
+    <Parameter id="rssdDatabaseName"
+      label="RSSD database name"
+      descr="The name of the RSSD database. Required for Discovery"
+      type="string"
+      use="optional"
+      default="SAMPLE_RS_RSSD"
+    />
+    <Parameter id="rssdUser"
+      label="RSSD user name"
+      descr="User name used to connect to the RSSD server. This user must have execute permissions on the RSSD stored procedures. Required for Discovery"
+      type="string"
+      use="optional"
+      default="sa"
+    />
+    <!-- rssdPasswd should be required but Sybase ESP Studio gives error with empty password -->
+    <Parameter id="rssdPasswd"
+      label="RSSD password"
+      descr="Password for the RSSD user. Required for Discovery"
+      type="password"
+      use="optional"
+      default=""
+    />
+    <Parameter id="repSubscriptionServer"
+      label="RSadapter data server name"
+      descr="The data server name used within the Rep Server connection definition to identify this instance of the Rep Adapter."
+      type="string"
+      use="required"
+      default="RSadapter"
+    />
+   
+    <!-- these parameters show up on the Advanced Tab in the Studio -->
+    <Parameter id="tdsListenerPort"
+      label="TDS port"
+      descr="Port used by the Rep Adapter. This is the port to which the Rep Server Connection definition connects"
+      type="uint"
+      use="advanced"
+      default="5100"
+    />
+    <Parameter id="tdsSslListenerPort"
+      label="TDS SSL port"
+      descr="SSL Port used by the Rep Adapter. This is the SSL port to which the Rep Server Connection definition connects"
+      type="uint"
+      use="advanced"
+      default=""
+    />
+    <Parameter id="keyStore"
+      label="Key store"
+      descr="Path to the key store used by Rep Adapter to establish secure TDS communication with Rep Server over SSL"
+      type="string"
+      use="advanced"
+      default="keystore.jks"
+    />
+    <Parameter id="keyStorePasswd" 
+        label="Key store password"
+        descr="Password for key store used in TDS SSL communication with Rep Server"
+        type="password"
+        use="advanced"
+		default=""
+     />
+    <Parameter id="adminUser"
+      label="Adapter admin user"
+      descr="User name user internally by Rep Adapter for internal communication. Do not use this account in your Rep Server connection."
+      type="string"
+      use="advanced"
+      default="RSadapterAdminUser"
+    />
+    <Parameter id="adminPasswd" 
+        label="Adapter admin password"
+        descr="Password user internally by Rep Adapter for internal communication"
+        type="password"
+        use="advanced"
+	default=""
+     />
+    <Parameter id="repConnUser" 
+        label="Rep Server connection user"
+        descr="User name for Rep Server connection. This should match the user specified when creating connection to adapter in Rep Server."
+        type="string"
+        use="required"
+        default="rsuser"
+     />
+    <Parameter id="repConnPasswd" 
+        label="Rep Server connection password"
+        descr="Password for Rep Server connection. This should match the password specified when creating connection to adapter in Rep Server."
+        type="password"
+        use="required"
+        default=""
+     />
+    <Parameter id="storedProcStreamOp"
+      label="Stored proc stream operation"
+      descr="Sybase ESP stream operation to use for Stored Procedure replication"
+      type="choice"
+      use="advanced"
+      default="insert" >
+      
+	<ValueList>
+	    <Value value="insert" label="Insert"/>
+	    <Value value="upsert" label="Upsert"/>
+	</ValueList>
+	
+    </Parameter>
+    <Parameter id="isTransactional" 
+      label="Transactional stream operations" 
+      descr="Use transactional stream operations"
+      type="boolean"
+      use="advanced"
+      default="false"
+    />
+    <Parameter id="isAsync" 
+      label="Async stream operations" 
+      descr="Use asynchronous stream operations"
+      type="boolean"
+      use="advanced"
+      default="false"
+    />
+    <Parameter id="isBatched" 
+      label="Batched stream operations" 
+      descr="Use batched stream operations"
+      type="boolean"
+      use="advanced"
+      default="true"
+    />
+    <Parameter id="batchSize" 
+      label="Batch size" 
+      descr="Size of batches used for stream operations"
+      type="uint"
+      use="advanced"
+      default="1000"
+    />
+    <Parameter id="publishWhenBatchFull" 
+      label="Publish when batch full"
+      descr="Publish to Sybase ESP when batch is full rather than when RepServer sends COMMIT"
+      type="boolean"
+      use="advanced"
+      default="false"
+    />
+    <Parameter id="errorOnMissingStreamColumn" 
+      label="Error on missing stream column" 
+      descr="Generate error when RepServer sends columns not in the target stream"
+      type="boolean"
+      use="advanced"
+      default="false"
+    />
+    
+    
+    <Parameter id="tableName" 
+        label="RSSD table name"
+        descr="Name of the table in RSSD. Required if RSSD table name is different from corresponding stream name"
+        type="tables"
+        use="advanced"
+        default=""
+     />
+    <Parameter id="permutation" 
+        label="Field Mapping"
+        descr="Mapping between the in-platform and external fields"
+        type="permutation"
+        use="advanced"
+        default=""
+     />
+     <Parameter id="projectUri"
+     	label="Project URI"
+     	descr="ESP cluster URI to connect to the project the adapter is attached to (esp://hostname:port/workspace_name/project_name)"
+     	type="string"
+     	default=""
+     	use="required"
+	/>
+     <Parameter id="espUser"
+    	label="ESP Server User ID"
+    	descr="User name for connecting to the ESP Server"
+    	type="string"
+    	default="t"
+    	use="optional"
+  	/>
+
+	<Parameter id="espPassword"
+	    label="ESP Server Password"
+	    descr="ESP Server Password for the ESP Server User ID.  Can be empty if using RSA authentication"
+	    type="password"
+	    default="t"
+	    use="optional"
+	  />
+
+	<Parameter id="authType"
+	  label="Authentication Mechanism Type"
+	  descr="Authentication mechanism to use"
+	  type="choice"
+	  use="required"
+	  default="user_password">
+	  <ValueList>
+		<Value value="user_password" label="USER PASSWORD" />
+		<Value value="rsa" label="RSA" />
+		<Value value="kerberos" label="KERBEROS" />
+	   </ValueList>	   
+	</Parameter>	
+	  
+	<Parameter id="rsaKeyStore"
+		    label="RSA Key Store"
+		    descr="RSA Key Store file name and location."
+		    type="filename"
+		    use="optional"
+	  />
+	  
+	 <Parameter id="rsaKeyStorePassword"
+	 	    label="RSA Key Store Password"
+	 	    descr="RSA Key Store Password."
+	 	    type="password"
+	 	    use="optional"
+	  />
+	
+	<Parameter id="kerberosKdc"
+			label="Kerberos KDC"
+			descr="Kerberos KDC host name"
+			type="string"
+			use="optional"
+	/>
+	
+	<Parameter id="kerberosRealm"
+			label="Kerberos Realm"
+			descr="Kerberos realm"
+			type="string"
+			use="optional"
+	/>
+
+	<Parameter id="kerberosService"
+			label="Kerberos Service"
+			descr="Kerberos service principal name"
+			type="string"
+			use="optional"
+	/>
+
+	<Parameter id="kerberosTicketCache"
+			label="Kerberos Ticket Cache"
+			descr="Kerberos ticket cache location"
+			type="filename"
+			use="optional"
+	/>
+	
+	<Parameter id="propertyset" 
+	      label="propertyset" 
+	      descr="to look up properties in project configuration"
+	      type="string"
+	      use="advanced"
+      	      default=""
+      	 />
+    
+  </Section>
+</Adapter>

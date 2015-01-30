@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Adapter type="input" external="true"
+  id="rmdsOMMInPlugin"
+  label="RMDS OMM Input (external)"
+  descr="Reads data from RMDS OMM"
+>
+ <Library file="simple_ext" type="binary"/>
+ <Special>
+    <Internal id="x_initialOnly" 
+      label="Does Initial Loading Only" 
+      descr="Do initial loading only (false=continuous)"
+      type="boolean" default="false"
+    />
+    <Internal id="x_addParamFile" 
+      label="Add Parameter File" 
+      type="boolean" default="false"
+    />
+    <Internal id="x_killRetryPeriod" 
+      label="Period to repeat the stop command until the process exits" 
+      type="int" default="0"
+    />
+
+<!-- AdapterIn.sh needs to see: -->
+<!--   script cmd inst host port ssl auth stream dir map table [user pass] -->
+  <Internal id="x_unixCmdExec" 
+        label="Start Command" type="string"
+        default="&quot;${runtimeDir}/bin/adapter-plugin.sh&quot; start $platformConnection $platformHost $platformCommandPort $platformSsl $platformAuth $platformStream &quot;${runtimeDir}&quot; &quot;$+{runtimeConfigFile=?${configFile}:${runtimeConfigFile}}&quot; &quot;${discTable}&quot; &quot;$user&quot; &quot;$password&quot;"
+  />
+  <Internal id="x_winCmdExec" 
+      label="Start Command" type="string"
+      default="echo rmdsOMMInPlugin not supported on Windows (start) - use remote execution"
+  />
+  <Internal id="x_unixCmdStop" 
+        label="Stop Command" type="string"
+        default="&quot;${runtimeDir}/bin/adapter-plugin.sh&quot; stop $platformConnection $platformHost $platformCommandPort $platformSsl $platformAuth $platformStream &quot;${runtimeDir}&quot; &quot;${configFile}&quot; &quot;$user&quot; &quot;$password&quot;"
+  />
+  <Internal id="x_winCmdStop" 
+      label="Stop Command" type="string"
+      default="echo rmdsOMMInPlugin not supported on Windows (stop) - use remote execution"
+  />
+
+  <Internal id="x_unixCmdDisc" 
+      label="Discovery Command" type="string"
+        default="&quot;$+{baseDir}/bin/discover.sh&quot; &quot;$+{baseDir}&quot; &quot;$+{omm_dictionary}&quot; &quot;$+{discDir}&quot;"
+    />
+    <Internal id="x_winCmdDisc" 
+      label="Discovery Command" type="string"
+      default="&quot;$+{baseDir}\\bin\\discover.bat&quot; &quot;$+{baseDir}&quot; &quot;$+{omm_dictionary}&quot; &quot;$+{discDir}&quot;"
+    />
+
+ </Special>
+
+ <Section>
+  <Parameter id="baseDir"
+     label="Installation Path" 
+     descr="Path to the Reuters OMM (rmdsomm) adapter installation directory"
+     type="directory" use="required"
+     default="$ESP_HOME/adapters/reuters_omm"
+  />
+  <Parameter id="omm_dictionary"
+        label="Reuters OMM Data dictionary" 
+        descr="Data dictionary to use to generate schemas"
+        type="string" use="required"
+        default="$ESP_HOME/adapters/reuters_omm/config/RDMFieldDictionary"
+  />
+  <Parameter id="configFile"
+        label="Map File"
+        descr="Path to map file"
+        type="configFilename" use="required"
+        default="$ESP_HOME/adapters/reuters_omm/examples/subexample.omm.map.xml"
+  />
+  <Parameter id="discDir"
+        label="Discovery Path" 
+        descr="Path to the adapter discovery directory"
+        type="directory" use="required"
+        default="$ESP_HOME/adapters/reuters_omm/schema"
+  />
+  <Parameter id="user" 
+      label="User" 
+      descr="User name for Adapter to connect to the platform"
+      type="string" use="optional"
+    />
+  <Parameter id="password" 
+      label="Password" 
+      descr="Password for Adapter to connect to the platform"
+      type="password" use="optional"
+    />
+  <Parameter id="runtimeDir" 
+      label="Runtime Path" 
+      descr="runtime path to adapter installation"
+      type="string" use="advanced"
+      default="$ESP_RMDSOMM_HOME"
+    />
+  <Parameter id="runtimeConfigFile"
+        label="Map File (runtime)"
+        descr="runtime path to map file"
+        type="string" use="advanced"
+        default=""
+  />
+
+  <Parameter id="discTable" 
+      label="Discovered Table" 
+      descr="name of discovered table; filled in by Studio"
+      type="tables" use="advanced"
+    />
+  <Parameter id="propertyset" 
+      label="propertyset" 
+      descr="to look up properties in project configuration"
+      type="string"
+      use="advanced"
+      default=""/>  	
+ </Section>
+
+</Adapter>

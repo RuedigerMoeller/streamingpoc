@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Adapter type="input"
+  id="wsmq_in"
+  label="WebSphere MQ Input"
+  descr="Reads data from a Websphere MQ queue"
+>
+  <Library file="wsmq_in" type="binary"/>
+  <Section>
+    <Parameter id="QueueName" 
+      label="Queue Name" 
+      descr="WebSphere Queue name to obtain MQ messages"
+      type="string"
+      use="required"
+    />
+    <Parameter id="QueueManagerName" 
+      label="Queue Manager Name" 
+      descr="WebSphere Queue Manager name to obtain MQ messages"
+      type="string"
+      use="required"      
+    />     
+    <Parameter id="SystemName" 
+      label="MQ System Name" 
+      descr="WebSphere system name to obtain MQ messages"
+      type="string"
+      use="required"
+    />
+    <Parameter id="Port" 
+      label="Port" 
+      descr="Port in system to get WebSphere MQ messages"
+      type="string"
+      use="required"      
+    /> 
+    <Parameter id="Channel" 
+      label="MQ Channel" 
+      descr="MQ Channel to get WebSphere MQ messages"
+      type="string"
+      use="required"
+    />
+    <Parameter id="MaxBufferSize" 
+      label="Maximum Buffer Size" 
+      descr="Maximum size in bytes of input buffer"
+      type="uint"
+      use="required"
+      default="10240"      
+    />
+	<Parameter id="syncpointmode" 
+      label="Sync Point Commit Mode" 
+      descr="Enables Sync Point Commit Mode"
+      type="boolean"
+      use="optional"
+      default="false"      
+    />
+	<Parameter id="batchsize" 
+      label="Batch Size" 
+      descr="Number of records in batch to commit in Sync Point Commit Mode"
+      type="uint"
+      use="optional"
+      default="1"      
+    />	
+    <Parameter id="reconnectAttemptDelayMSec" 
+      label="Delay between Reconnection Attempts" 
+      descr="Number of milliseconds between attempts to reconnect"
+      type="int"
+      use="advanced"
+      default="1000"
+    />
+    <Parameter id="maxReconnectAttempts" 
+      label="Maximum Number of Reconnection Attempts" 
+      descr="Number of attempts at reconnecting before giving up. Use -1 to retry an unlimited number of times."
+      type="int"
+      use="advanced"
+      default="1"/>
+
+    <Parameter id="CsvSeparators" 
+      label="CSV delimiters" 
+      descr="These separate fields in the CSV input line. Multiple separators may exist and any separator will cause a field break. The default is a comma."
+      type="string"
+      use="advanced"
+      default=","
+    />
+    <Parameter id="CsvEscapeChars" 
+      label="CSV escape characters" 
+      descr="The characters used to escape special characters. These include the separators, escape_chars and quote_chars embedded in a field. The default is a backslash."
+      type="string"
+      use="advanced"
+      default="\"
+    /> 
+    <Parameter id="CsvQuoteChars" 
+      label="CSV quote characters" 
+      descr="These characters designate the beginning and ending of a field. The contents of the field may be anything except the quote character that initiated the quote. The initial quote character _may_ be in the field if it is escaped. The defaults is double quotes."
+      type="string"
+      use="advanced"
+      default="&quot;"
+    /> 
+    <Parameter id="CsvTrimming" 
+      label="Perform CSV trimming?" 
+      descr="The default, true, trims leading and trailing whitespace from each field. This is generally as expected. This will, however, interpret a quoted field of whitespace as NULL."
+      type="boolean"
+      use="advanced"
+      default="true"
+    /> 
+    <Parameter id="TimestampColumnFormat" 
+      label="Timestamp Column Format" 
+      descr="The format in which timestamp values are stored in the file"
+      type="string"
+      use="advanced"
+      default="%Y-%m-%d %H:%M:%S"
+    />
+    <Parameter id="DateColumnFormat" 
+      label="Date Column Format" 
+      descr="The format in which date values are stored in the file"
+      type="string"
+      use="advanced"
+      default="%Y-%m-%d"
+    />
+    <Parameter id="TimeColumnFormat"
+      label="Time Column Format"
+      descr="The time data field format used by the messages obtained from the WebSphere MQ"
+      type="string"
+      use="advanced"
+      default="%H:%M:%S"
+    />
+    <Parameter id="expectStreamNameOpcode"
+      label="Stream Name, Opcode Expected" 
+      descr="If true, the first two fields in CSV records are interpreted as stream name, opcode"
+      type="boolean"
+      use="advanced"
+      default="false"
+    />
+    <Parameter id="propertyset" 
+      label="propertyset" 
+      descr="to look up properties in project configuration"
+      type="string"
+      use="advanced"
+      default=""/>  	
+  </Section>
+</Adapter>

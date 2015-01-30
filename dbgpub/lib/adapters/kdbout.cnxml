@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Adapter type="output" external="true"
+  id="KDBOutput"
+  label="KDB Output (external)"
+  descr="Writes data to a KDB database in streaming mode"
+>
+  <Library file="simple_ext" type="binary"/>
+  <!-- 
+     the special section contains the special internal parameters
+     which are prefixed with "x_". Although these are parameters,
+     the framwork requires them to be defined using the <Internal
+     .../> element. They are hidden from the user in the ESP Studio.
+  -->
+  <Special>
+    <Internal id="x_initialOnly" 
+      label="Does Initial Loading Only" 
+      descr="Do initial loading, or the continuous loading"
+      type="boolean"
+      default="false"
+    />
+    <Internal id="x_addParamFile" 
+      label="Add Parameter File" 
+      type="boolean"
+      default="false"
+    />
+    <Internal id="x_killRetryPeriod" 
+      label="Period to repeat the stop command until the process exits" 
+      type="int"
+      default="1"
+    />
+
+    <!-- Use esp_kdbout ESP utility
+    -->
+    <Internal id="x_unixCmdExec" 
+      label="Execute Command" 
+      type="string"
+      default="$ESP_HOME/bin/esp_kdbout 
+ $+{projectUri&lt;>?-p $projectUri:-p $platformHost:$platformCommandPort}
+ -A $authentication 
+ $+{espUser&lt;>?-c $espUser}$+{espPassword&lt;>?\:$espPassword} 
+ -t $table 
+ $+{platformAuth=rsa?-k$rsaKeyFile} 
+ $+{platformAuth=gssapi?-G} 
+ -H $server:$port
+ $+{user&lt;>?-u $user}$+{password&lt;>?\:$password} 
+ $+{platformStream&lt;>?-s &quot;$platformStream&quot;}
+ $+{permutation&lt;>?-M $permutation} 
+ ${mode=push?-m} 
+ ${async=true?-a} 
+ -T $connectionRetries 
+ -C /tmp/$platformStream.$platformConnection.$platformCommandPort.pid
+ -b $blockSize 
+ ${baseOnly=true?-n}
+ ${lossy=true?-l}
+ $+{pulsed&lt;>0?-L $pulsed} 
+ ${shine=true?-R}
+ ${droppable=true?-B}
+ ${originalBlocks=true?-K}
+ ${debug=true?-d}
+ ${encrypt=true?-e}
+ $+{ignoreFields&lt;>?-I $ignoreFields} 
+ $+{omitFields&lt;>?-O $omitFields}
+ $+{query&lt;>?-q &quot;$query&quot;}"
+    />
+
+    <Internal id="x_winCmdExec" 
+      label="Execute Command" 
+      type="string"
+      default="$+/{$ESP_HOME/bin/esp_kdbout} 
+ $+{projectUri&lt;>?-p $projectUri:-p $platformHost:$platformCommandPort} 
+ -A $authentication 
+ $+{espUser&lt;>?-c $espUser}$+{espPassword&lt;>?\:$espPassword} 
+ -t $table 
+ $+{platformAuth=rsa?-k$rsaKeyFile} 
+ $+{platformAuth=gssapi?-G} 
+ -H $server:$port
+ $+{user&lt;>?-u $user}$+{password&lt;>?\:$password} 
+ $+{platformStream&lt;>?-s &quot;$platformStream&quot;}
+ $+{permutation&lt;>?-M $permutation} 
+ ${mode=push?-m} 
+ ${async=true?-a} 
+ -T $connectionRetries 
+ $+/{-C $TMP/$platformStream.$platformConnection.$platformCommandPort.pid}
+ -b $blockSize 
+ ${baseOnly=true?-n}      
+ ${lossy=true?-l}
+ $+{pulsed&lt;>0?-L $pulsed} 
+ ${shine=true?-R}
+ ${droppable=true?-B}
+ ${originalBlocks=true?-K}
+ ${debug=true?-d}
+ ${encrypt=true?-e}
+ $+{ignoreFields&lt;>?-I $ignoreFields} 
+ $+{omitFields&lt;>?-O $omitFields}
+ $+{query&lt;>?-q &quot;$query&quot;}"
+    />
+
+    <!-- 
+        use the esp_cli command to stop an existing esp_upload connection named:
+        $platformStream.$platformConnection
+    -->
+    <Internal id="x_unixCmdStop" 
+      label="Stop Command" 
+      type="string"
+      default="kill -9 `cat /tmp/$platformStream.$platformConnection.$platformCommandPort.pid` > /dev/null" 
+    />
+    <Internal id="x_winCmdStop" 
+      label="Stop Command" 
+      type="string"
+      default="for /F %i in ($+/{$TMP/$platformStream.$platformConnection.$platformCommandPort.pid}) DO TASKKILL /F /PID %i"
+    />
+
+    <!--
+    use the sp_discXMLfiles command to do data discovery. 
+    The command below will have '-o "<temp file>"' added to it. It 
+    will write the discovered data in this file.
+     -->
+    <Internal id="x_unixCmdDisc" 
+      label="Discovery Command" 
+      type="string"
+      default="$ESP_HOME/bin/esp_kdbout -H $server:$port $+{user&lt;>?-u $user}$+{password&lt;>?\:$password} 
+                    $+{table&lt;>?-t '$table'}"
+    />
+    <Internal id="x_winCmdDisc" 
+      label="Discovery Command" 
+      type="string"
+      default="$+/{$ESP_HOME/bin/esp_kdbout} -H $server:$port $+{user&lt;>?-u $user}$+{password&lt;>?\:$password}
+                    $+{table&lt;>?-t &quot;$table&quot;}"
+    />
+  </Special>
+
+  <Section>
+    <!-- 
+        Any parameter defined here, is visible in the ESP Studio, and may 
+    be configured by the user at runtime in the data location explorer. 
+    These are defined according to the $ESP_HOME/etc/Adapter.xsd 
+    schema.
+    -->  
+    <Parameter id="projectUri"
+    label="Project URI"
+    descr="URI to connect to a project in cluster env."
+    type="string"
+    default=""
+    use="optional"
+    />
+    <Parameter id="espUser"
+      label="ESP Server User ID"
+      descr="User name for connecting to the ESP Server"
+      type="string"
+      default="t"
+      use="optional"
+    />
+
+    <Parameter id="espPassword"
+      label="ESP Server Password"
+      descr="ESP Password for the ESP Server User ID.  Can be empty if using RSA authentication"
+      type="password"
+      default="t"
+      use="optional"
+    />
+
+    <Parameter id="authentication"
+      label="Authentication"
+      descr="Authentication mechanism to use"
+      type="choice"
+      default="user_password">
+      <ValueList>
+        <Value value="user_password" label="PAM" />
+        <Value value="rsa" label="RSA" />
+        <Value value="kerberos" label="Kerberos"/>
+       </ValueList>
+    </Parameter>
+
+    <Parameter id="rsaKeyFile"
+      label="RSA Key File"
+      descr="RSA Private key file name and location."
+      type="filename"
+      use="optional"
+    />
+
+    <Parameter id="server"
+      label="KDB Server"
+      descr="Name or IP address of the database server machine"
+      type="string"
+      use="required"
+      default="localhost"
+    />
+
+    <Parameter id="port"
+      label="KDB Port"
+      descr="IP port of the database listener"
+      type="range"
+      rangeLow="0"
+      rangeHigh="65535"
+      default="5001"
+      use="required"
+    />
+
+    <Parameter id="user"
+      label="KDB User"
+      descr="User ID for the database connection"
+      type="string"
+      use="optional"
+    />
+
+    <Parameter id="password"
+      label="KDB Password"
+      descr="Password for the database connection"
+      type="password"
+      use="optional"
+    />
+
+    <Parameter id="table" 
+      label="Source Table"
+      descr="Specify name of the source table to insert/update data into KDB database table"
+      type="tables"
+      use="advanced"
+    />
+
+    <Parameter id="query" 
+      label="SQL Query"
+      descr="Specify SQL query to filter incoming data"
+      type="string"
+      use="advanced"
+    />
+
+    <Parameter id="permutation"
+      label="Field Mapping"
+      descr="Mapping between the in-ESP Server and external fields. In the format ESPColumn1=KDBColumn1:ESpColumn2=KDBColumn2...."
+      type="string"
+      use="advanced"
+    />
+
+    <Parameter id="mode"
+      label="Streaming mode"
+      descr="Read data in a streaming fashion or just take a snapshot of the data."
+      type="choice"
+      use="advanced"
+      default="stream">
+      <ValueList>
+        <Value value="stream" label="Use .u.upd"/>
+        <Value value="push" label="Use update"/>
+      </ValueList>
+    </Parameter>
+
+    <Parameter id="async"
+      label="Async Mode"
+      descr="If set to true data will be sent to KDB asynchronously"
+      type="boolean"
+      use="advanced"
+      default="false"
+    />
+
+    <Parameter id="connectionRetries"
+      label="Connection Retries"
+      descr="Number of times to retry connection if it breaks"
+      type="int"
+      use="advanced"
+      default="1"
+    />
+
+    <Parameter id="blockSize"
+      label="KDB batch size"
+      descr="Maximum number of records in a single KDB write batch"
+      type="int"
+      use="advanced"
+      default="5000"
+    />
+
+    <Parameter id="baseOnly"
+      label="Base data only"
+      descr="If true does not retrieve data existing at connection time"
+      type="boolean"
+      use="advanced"
+      default="false"
+    />
+
+    <Parameter id="lossy"
+      label="Lossy subscriber"
+      descr="If true, plaform will drop records if Adapter slows down"
+      type="boolean"
+      use="advanced"
+      default="false"
+    />
+
+    <Parameter id="pulsed"
+      label="Pulse interval"
+      descr="If non zero the subscription is created in pulsed mode with the specified period"
+      type="int"
+      use="advanced"
+      default="0"
+    />
+
+    <Parameter id="shine"
+      label="Shine through"
+      descr="If true subscribe send data with shine through = "
+      type="boolean"
+      use="advanced"
+      default="false"
+    />
+
+    <Parameter id="droppable"
+      label="Droppable subscription"
+      descr="If true ESP Server will drop subscription if data backs up"
+      type="boolean"
+      use="advanced"
+      default="false"
+    />
+
+    <Parameter id="originalBlocks"
+      label="Preserve transaction blocks"
+      descr="If true ESP Server preserves transaction boundaries in subscribed data" 
+      type="boolean"
+      use="advanced"
+      default="false"
+    />
+
+    <Parameter id="debug"
+      label="Debug"
+      descr="Output debug messages"
+      type="boolean"
+      use="advanced"
+      default="false"
+    />
+
+    <Parameter id="ignoreFields"
+      label="Ignored fields"
+      descr="Comm delimited list of kdb fields to ignore, these are set to NULL"
+      type="string"
+      use="advanced"
+      default=""
+    />
+
+    <Parameter id="omitFields"
+      label="Omitted fields"
+      descr="Comm delimited list of kdb fields to omit, these are not sent"
+      type="string"
+      use="advanced"
+      default=""
+    />
+    <Parameter id="quietMode"
+      label="Quiet Mode"
+      descr="If true, kdb log message will not show in standard error output"
+      type="boolean"
+      use="advanced"
+      default="true"
+    />
+
+    <Parameter id="encrypt"
+      label="encryption"
+      descr="Connection encrypted between kdb and ESP Server"
+      type="boolean"
+      use="advanced"
+      default="false"
+    />
+
+    <Parameter id="x_paramFile" 
+      label="Parameter File" 
+      descr="File to write the parameters into, to pass to the external process"
+      type="filename"
+      use="advanced"
+    />
+
+    <Parameter id="x_paramFormat" 
+      label="Parameter File Format" 
+      descr="Format, in which the external process expects the parameters"
+      type="choice"
+      use="advanced"
+      default="prop"
+    >
+      <ValueList>
+          <Value value="prop" label="Java properties"/>
+          <Value value="shell" label="Unix shell assignments"/>
+          <Value value="xml" label="Simple XML"/>
+      </ValueList>
+    </Parameter>
+    
+     <Parameter id="propertyset" 
+      label="propertyset" 
+      descr="to look up properties in project configuration"
+      type="string"
+      use="advanced"
+      default=""/>  
+  </Section>
+</Adapter>

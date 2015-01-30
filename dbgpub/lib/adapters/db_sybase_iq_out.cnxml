@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Adapter type="output"
+  id="sybase_iq_out"
+  label="Sybase IQ Output"
+  descr="Writes data to Sybase IQ"
+>
+<Library file="db_sybase_iq_out" type="binary"/>
+  <Special>
+    <Internal id="freeRowData"
+      label="Free row data"
+      type="boolean"
+      default="false"
+    />
+  </Special>
+  <Section>
+    <Parameter id="service" 
+      label="Database Service Name" 
+      descr="Name of service entry with connection information to an IQ database. Only ODBC connections are supported."
+      type="string"
+      use="required"
+      default=""/> 
+      
+    <Parameter id="sourceSchema" 
+      label="Target Database Schema Name" 
+      descr="The name of the database schema of the target table. This property is required when not in discovery mode."
+      type="string"
+      use="optional"
+      default=""/> 
+
+    <Parameter id="table" 
+      label="Target Database Table Name" 
+      descr="The name of the database table to push data to. This property is required when not in discovery mode."
+      type="string"
+      use="optional"
+      default=""/> 
+      
+    <Parameter id="permutation" 
+      label="Field Mapping" 
+      descr="Mapping between the ESP and database fields."
+      type="permutation"
+      use="advanced"
+      default=""/> 
+      
+    <Parameter id="onlyBase" 
+      label="Only Base Content" 
+      descr="Send only the initial contents of the stream, once."
+      type="boolean"
+      use="advanced"
+      default="false"/> 
+      
+    <Parameter id="outputBase" 
+      label="Include Base Content" 
+      descr="Start by recording the initial contents of the stream, not just the updates."
+      type="boolean"
+      use="optional"
+      default="false"/> 
+      
+    <Parameter id="recoverOnly" 
+      label="Recover Existing Files Only" 
+      descr="The adapter will process any files that were created but not loaded by a previous instance of the adapter."
+      type="boolean"
+      use="advanced"
+      default="false"/> 
+      
+    <Parameter id="dataWarehouseMode" 
+      label="Data Warehouse Mode" 
+      descr="The type of data warehousing mode to be used by the adapter."
+      type="choice"
+      use="advanced"
+      default="OFF">
+        <ValueList>
+          <Value value="INSERTONLY" label="Insert Only"/>
+          <Value value="ON" label="On" />
+          <Value value="OFF" label="Off" />
+          <Value value="ARCHIVE" label="Archive" />
+       </ValueList>
+      </Parameter> 
+      
+    <Parameter id="timestampColumnName" 
+      label="Timestamp Column Name" 
+      descr="If specified then insert into this IQ column the timestamp indicating when the current row was added to the I/O buffer."
+      type="string"
+      use="advanced"
+      default=""/> 
+      
+	<Parameter id="opcodeColumnName" 
+      label="Operation Code Column Name" 
+      descr="Name of the database column used by the IQ output adapter to store operation code."
+      type="string"
+      use="advanced"
+      default=""
+    />
+	
+    <Parameter id="primaryFileLocation" 
+      label="Primary File Location" 
+      descr="IQ load files will be stored temporarily in this directory until they are loaded into the database. This property is required when not in discovery mode."
+      type="directory"
+      use="optional"
+      default=""/> 
+      
+    <Parameter id="overflowFileLocation" 
+      label="Overflow File Location" 
+      descr="If the primary file location does not contain enough space this location will be used to temporarily store IQ load files."
+      type="directory"
+      use="optional"
+      default=""/> 
+      
+    <Parameter id="targetFileSize" 
+      label="Target Temporary File Size" 
+      descr="The maximum size for an IQ load file before it is loaded into IQ."
+      type="range"
+      use="advanced"
+      default="2000"
+	  rangeLow="1"/> 
+      
+    <Parameter id="idleBufferWriteDelay" 
+      label="Idle Buffer Write Delay" 
+      descr="If a row has not been received by the adapter in this many seconds, the previously created file will be loaded."
+      type="range"
+      use="advanced"
+      default="10"
+	  rangeLow="1"/> 
+      
+    <Parameter id="bufferAgeLimit" 
+      label="Buffer Age Limit" 
+      descr="The maximum number of time (in seconds) that can elapse between the first record in the IQ load file and the last record."
+      type="range"
+      use="advanced"
+      default="600"
+	  rangeLow="1"/> 
+      
+    <Parameter id="disableReferentialIntegrity" 
+      label="Disable Referential Integrity" 
+      descr="Disables the referential integrity constraints on the table before the loading operation is performed."
+      type="boolean"
+      use="advanced"
+      default="false"/>
+      
+    <Parameter id="ioBufferSizeMB" 
+      label="I/O Buffer Size" 
+      descr="The I/O buffer size determines how much data is buffered before being written to the current IQ load file."
+      type="range"
+      use="advanced"
+      default="20"
+	  rangeLow="1"/> 
+      
+    <Parameter id="numIOBuffers" 
+      label="Number Of I/O Buffers" 
+      descr="The number of data buffers to maintain."
+      type="range"
+      use="advanced"
+      default="5"
+	  rangeLow="1"/>  
+      
+    <Parameter id="propertyset" 
+      label="propertyset" 
+      descr="To look up properties in project configuration."
+      type="string"
+      use="advanced"
+      default=""/>
+      
+    <Parameter id="timezoneForStats" 
+      label="Timezone For Statistics" 
+      descr="The timezone the adapter will use for the 'since midnight' statistics."
+      type="string"
+      use="advanced"
+      default="GMT"/> 
+     
+    <Parameter id="joinDelete" 
+      label="Enable Join Delete" 
+      descr="Inserts delete data into a temporary table to use in a join-based delete operation."
+      type="boolean"
+      use="advanced"
+      default="false"/>
+	  
+	<Parameter id="reconnectAttemptDelayMSec" 
+      label="Delay between Reconnection Attempts" 
+      descr="Number of milliseconds between attempts to reconnect"
+      type="int"
+      use="advanced"
+      default="1000"/>
+	  
+	<Parameter id="maxReconnectAttempts" 
+      label="Maximum Number of Reconnection Attempts" 
+      descr="Number of attempts at reconnecting before giving up. -1 for infinite."
+      type="int"
+      use="advanced"
+      default="1"/>
+
+	<Parameter id="enableGDMode"
+      label="Runs Adapter in GD Mode" 
+      descr="Runs Adapter in GD Mode"
+      type="boolean"
+      use="advanced"
+      default="false"
+	/>
+	
+    <Parameter id="enableGDCache" 
+      label="enable the adapter internal cache mode"
+      descr="When set to true, only rows have been checkpointed will be sent to adapter, others will be cached internally. This setting will be ignored if the attached stream is not running on GD with CP mode."
+      type="boolean"
+      use="advanced"
+      default="true"
+    />
+    <Parameter id="gdBatchSize" 
+      label="GD Batch Size"
+      descr="The number indicates every how many blocks will an commit command be sent to adapter and a GDCommit be sent to stream."
+      type="int"
+      use="advanced"
+      default="10"
+    />
+  </Section>
+</Adapter>

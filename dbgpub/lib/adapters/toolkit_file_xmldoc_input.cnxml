@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Adapter type="input" external="true"
+  id="toolkit_file_xmldoc_input"
+  label="File/Hadoop XML Input"
+  descr="Reads XML-formatted data from a file or Hadoop Distributed File System"
+>
+  <Library file="simple_ext" type="binary"/>
+  
+  <Special>
+    <Internal id="x_initialOnly" 
+      label="Does Initial Loading Only" 
+      descr="Do initial loading, or the continuous loading"
+      type="boolean"
+      default="false"
+    />
+    <Internal id="x_addParamFile" 
+      label="Add Parameter File" 
+      type="boolean"
+      default="false"
+    />
+    <Internal id="x_killRetryPeriod" 
+      label="Period to repeat the stop command until the process exits" 
+      type="int"
+      default="0"
+    />
+	<Internal id="x_allocateLocalSessionId" 
+      label="Request a new local session id"
+      descr="Request the project to allocate a new local session id. Then, the adapter could connect to the project using the new local session id depending on the adapter's choice"	  
+      type="boolean"
+      default="true"
+    />
+
+    <!-- 
+	Start the out-of-process Sybase ESP Adapter.
+    -->
+    <Internal id="x_unixCmdExec" 
+      label="Execute Command" 
+      type="string"
+	  default="&quot;$ESP_HOME/adapters/framework/bin/start.sh&quot; &quot;$ESP_HOME/adapters/framework/instances/file_xmldoc_input/adapter_config.xml&quot; &quot;-DFileInputTransporterParameters.Dir=$dir&quot; &quot;-DFileInputTransporterParameters.File=$file&quot; &quot;-DFileInputTransporterParameters.DynamicMode=$dynamicMode&quot; &quot;-DFileInputTransporterParameters.PollingPeriod=$pollingPeriod&quot; &quot;-DFileInputTransporterParameters.RemoveAfterProcess=$removeAfterProcess&quot; &quot;-DXmlDocStreamToEspFormatterParameters.XmlElemMappingRowPattern=$xmlElemMappingRowPattern&quot; &quot;-DXmlDocStreamToEspFormatterParameters.XmlElemNamespaceURI=$xmlElemNamespaceURI&quot; &quot;-DXmlDocStreamToEspFormatterParameters.ColsMapping.Column=$espColumnPattern&quot; &quot;-DXmlDocStreamToEspFormatterParameters.DateFormat=$xmldocDateFormat&quot; &quot;-DXmlDocStreamToEspFormatterParameters.TimestampFormat=$xmldocTimestampFormat&quot; &quot;-DXmlDocStreamToEspFormatterParameters.TimeFormat=$xmldocTimeFormat&quot;"
+    />
+    
+    <Internal id="x_winCmdExec" 
+      label="Execute Command" 
+      type="string"
+	  default="&quot;$ESP_HOME/adapters/framework/bin/start.bat&quot; &quot;$ESP_HOME/adapters/framework/instances/file_xmldoc_input/adapter_config.xml&quot; &quot;-DFileInputTransporterParameters.Dir=$dir&quot; &quot;-DFileInputTransporterParameters.File=$file&quot; &quot;-DFileInputTransporterParameters.DynamicMode=$dynamicMode&quot; &quot;-DFileInputTransporterParameters.PollingPeriod=$pollingPeriod&quot; &quot;-DFileInputTransporterParameters.RemoveAfterProcess=$removeAfterProcess&quot; &quot;-DXmlDocStreamToEspFormatterParameters.XmlElemMappingRowPattern=$xmlElemMappingRowPattern&quot; &quot;-DXmlDocStreamToEspFormatterParameters.XmlElemNamespaceURI=$xmlElemNamespaceURI&quot; &quot;-DXmlDocStreamToEspFormatterParameters.ColsMapping.Column=$espColumnPattern&quot; &quot;-DXmlDocStreamToEspFormatterParameters.DateFormat=$xmldocDateFormat&quot; &quot;-DXmlDocStreamToEspFormatterParameters.TimestampFormat=$xmldocTimestampFormat&quot; &quot;-DXmlDocStreamToEspFormatterParameters.TimeFormat=$xmldocTimeFormat&quot;"
+    />
+
+    <Internal id="x_unixCmdStop" 
+      label="Stop Command" 
+      type="string"
+	  default="&quot;$ESP_HOME/adapters/framework/bin/stop.sh&quot; &quot;$ESP_HOME/adapters/framework/instances/file_xmldoc_input/adapter_config.xml&quot;"
+    />
+    <Internal id="x_winCmdStop" 
+      label="Stop Command" 
+      type="string"
+	  default="&quot;$ESP_HOME/adapters/framework/bin/stop.bat&quot; &quot;$ESP_HOME/adapters/framework/instances/file_xmldoc_input/adapter_config.xml&quot;"
+    />
+
+  </Special>
+  
+  <Section>
+    <!-- These parameters show up in the Sybase ESP Studio properties dialog -->
+    <Parameter id="dir"
+         label="Directory" 
+         descr="Location of the data files"
+         type="directory"
+	       use="optional"
+	       />
+	  <Parameter id="file"
+         label="File (in Directory)" 
+         descr="File to read (wildcards are allowed)"
+	       type="string"
+	       use="required"
+	       />
+	<Parameter id="xmlElemMappingRowPattern"
+	       label="Row Expression"
+	       descr="The XPath expression for mapping XML elements to ESP rows"
+	       type="string"
+	       use="required"
+	       />
+	<Parameter id="xmlElemNamespaceURI"
+	       label="Namespace URI"
+	       descr="The namespace URI for XML elements included in the pattern expression"
+	       type="string"
+	       use="optional"
+	       />
+	<Parameter id="espColumnPattern"
+	       label="Column Expression List"
+	       descr="Comma-separated list of XPath expressions for mapping XML elements to ESP columns. If the XML element used in an expression belongs to a namespace, specify the namespace in the expression"
+	       type="string"
+	       use="required"
+	       />
+	<Parameter id="dynamicMode"
+	       label="Dynamic Loading Mode"
+	       descr="Dynamic mode for reading files. Valid values: static, dynamicFile, dynamicPath"
+	       type="string"
+	       use="optional"
+	       />
+	<Parameter id="pollingPeriod"
+	       label="Poll Period (seconds)"
+	       descr="Poll period when dynamicMode is 'dynamicFile' or 'dynamicPath'"
+	       type="int"
+	       use="advanced"
+	       />
+    <Parameter id="removeAfterProcess"
+	       label="Remove Files After Processing"
+	       descr="Remove files after they have been processed"
+	       type="boolean"
+	       use="optional"
+	       />
+	<Parameter id="xmldocDateFormat" 
+	       label="Date Format"
+	       descr="Format string for parsing date values"
+	       type="string"
+	       use="advanced"
+      	 />
+	<Parameter id="xmldocTimestampFormat" 
+	       label="Timestamp Format"
+	       descr="Format string for parsing timestamp values"
+	       type="string"
+	       use="advanced"
+      	 />
+	<Parameter id="xmldocTimeFormat" 
+	       label="Time Format"
+	       descr="Format string for parsing time values"
+	       type="string"
+	       use="advanced"
+      	 />      	 
+	<Parameter id="propertyset" 
+      label="propertyset" 
+      descr="to look up properties in project configuration"
+      type="string"
+      use="advanced"
+      default=""/>
+  </Section>
+</Adapter>

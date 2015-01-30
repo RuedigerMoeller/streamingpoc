@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Adapter type="input" external="true"
+  id="toolkit_file_csv_input"
+  label="File/Hadoop CSV Input"
+  descr="Reads delimiter-separated data from a file or Hadoop Distributed File System"
+>
+  <Library file="simple_ext" type="binary"/>
+  
+  <Special>
+    <Internal id="x_initialOnly" 
+      label="Does Initial Loading Only" 
+      descr="Do initial loading, or the continuous loading"
+      type="boolean"
+      default="false"
+    />
+    <Internal id="x_addParamFile" 
+      label="Add Parameter File" 
+      type="boolean"
+      default="false"
+    />
+    <Internal id="x_killRetryPeriod" 
+      label="Period to repeat the stop command until the process exits" 
+      type="int"
+      default="0"
+    />
+	<Internal id="x_allocateLocalSessionId" 
+      label="Request a new local session id"
+      descr="Request the project to allocate a new local session id. Then, the adapter could connect to the project using the new local session id depending on the adapter's choice"	  
+      type="boolean"
+      default="true"
+    />
+
+    <!-- 
+	Start the out-of-process Sybase ESP Adapter.
+    -->
+    <Internal id="x_unixCmdExec" 
+      label="Execute Command" 
+      type="string"
+	  default="&quot;$ESP_HOME/adapters/framework/bin/start.sh&quot; &quot;$ESP_HOME/adapters/framework/instances/file_csv_input/adapter_config.xml&quot; &quot;-DFileInputTransporterParameters.Dir=$dir&quot; &quot;-DFileInputTransporterParameters.File=$file&quot; &quot;-DFileInputTransporterParameters.DynamicMode=$dynamicMode&quot; &quot;-DFileInputTransporterParameters.PollingPeriod=$pollingPeriod&quot; &quot;-DFileInputTransporterParameters.RemoveAfterProcess=$removeAfterProcess&quot; &quot;-DFileInputTransporterParameters.ScanDepth=$scanDepth&quot; &quot;-DCsvStringToEspFormatterParameters.Delimiter=$csvDelimiter&quot; &quot;-DCsvStringToEspFormatterParameters.DateFormat=$csvDateFormat&quot; &quot;-DCsvStringToEspFormatterParameters.TimestampFormat=$csvTimestampFormat&quot; &quot;-DCsvStringToEspFormatterParameters.TimeFormat=$csvTimeFormat&quot; &quot;-DCsvStringToEspFormatterParameters.HasHeader=$csvHasHeader&quot; &quot;-DCsvStringToEspFormatterParameters.ExpectStreamNameOpcode=$csvExpectStreamNameOpcode&quot;"
+    />
+    
+    <Internal id="x_winCmdExec" 
+      label="Execute Command" 
+      type="string"
+	  default="&quot;$ESP_HOME/adapters/framework/bin/start.bat&quot; &quot;$ESP_HOME/adapters/framework/instances/file_csv_input/adapter_config.xml&quot; &quot;-DFileInputTransporterParameters.Dir=$dir&quot; &quot;-DFileInputTransporterParameters.File=$file&quot; &quot;-DFileInputTransporterParameters.DynamicMode=$dynamicMode&quot; &quot;-DFileInputTransporterParameters.PollingPeriod=$pollingPeriod&quot; &quot;-DFileInputTransporterParameters.RemoveAfterProcess=$removeAfterProcess&quot; &quot;-DFileInputTransporterParameters.ScanDepth=$scanDepth&quot; &quot;-DCsvStringToEspFormatterParameters.Delimiter=$csvDelimiter&quot; &quot;-DCsvStringToEspFormatterParameters.DateFormat=$csvDateFormat&quot; &quot;-DCsvStringToEspFormatterParameters.TimestampFormat=$csvTimestampFormat&quot; &quot;-DCsvStringToEspFormatterParameters.TimeFormat=$csvTimeFormat&quot; &quot;-DCsvStringToEspFormatterParameters.HasHeader=$csvHasHeader&quot; &quot;-DCsvStringToEspFormatterParameters.ExpectStreamNameOpcode=$csvExpectStreamNameOpcode&quot;"
+    />
+
+    <Internal id="x_unixCmdStop" 
+      label="Stop Command" 
+      type="string"
+	  default="&quot;$ESP_HOME/adapters/framework/bin/stop.sh&quot; &quot;$ESP_HOME/adapters/framework/instances/file_csv_input/adapter_config.xml&quot;"
+    />
+    <Internal id="x_winCmdStop" 
+      label="Stop Command" 
+      type="string"
+	  default="&quot;$ESP_HOME/adapters/framework/bin/stop.bat&quot; &quot;$ESP_HOME/adapters/framework/instances/file_csv_input/adapter_config.xml&quot;"
+    />
+
+    <!--
+	Data discovery. 
+	The command below will have '-o "<temp file>"' added to it. It 
+	will write the discovered data in this file.
+     -->
+    <Internal id="x_unixCmdDisc" 
+      label="Discovery Command" 
+      type="string"
+	  default="&quot;$ESP_HOME/adapters/framework/bin/discover.sh&quot; &quot;$ESP_HOME/adapters/framework/instances/file_csv_input/adapter_config.xml&quot; &quot;-DFileInputTransporterParameters.Dir=$dir&quot; &quot;-DFileInputTransporterParameters.File=$file&quot; &quot;-DFileInputTransporterParameters.DynamicMode=$dynamicMode&quot; &quot;-DFileInputTransporterParameters.PollingPeriod=$pollingPeriod&quot; &quot;-DFileInputTransporterParameters.RemoveAfterProcess=$removeAfterProcess&quot; &quot;-DFileInputTransporterParameters.ScanDepth=$scanDepth&quot; &quot;-DCsvStringToEspFormatterParameters.Delimiter=$csvDelimiter&quot; &quot;-DCsvStringToEspFormatterParameters.DateFormat=$csvDateFormat&quot; &quot;-DCsvStringToEspFormatterParameters.TimestampFormat=$csvTimestampFormat&quot; &quot;-DCsvStringToEspFormatterParameters.HasHeader=$csvHasHeader&quot; &quot;-DCsvStringToEspFormatterParameters.ExpectStreamNameOpcode=$csvExpectStreamNameOpcode&quot;" 
+    />
+    <Internal id="x_winCmdDisc" 
+      label="Discovery Command" 
+      type="string"
+	  default="&quot;$ESP_HOME/adapters/framework/bin/discover.bat&quot; &quot;$ESP_HOME/adapters/framework/instances/file_csv_input/adapter_config.xml&quot; &quot;-DFileInputTransporterParameters.Dir=$dir&quot; &quot;-DFileInputTransporterParameters.File=$file&quot; &quot;-DFileInputTransporterParameters.DynamicMode=$dynamicMode&quot; &quot;-DFileInputTransporterParameters.PollingPeriod=$pollingPeriod&quot; &quot;-DFileInputTransporterParameters.RemoveAfterProcess=$removeAfterProcess&quot; &quot;-DFileInputTransporterParameters.ScanDepth=$scanDepth&quot; &quot;-DCsvStringToEspFormatterParameters.Delimiter=$csvDelimiter&quot; &quot;-DCsvStringToEspFormatterParameters.DateFormat=$csvDateFormat&quot; &quot;-DCsvStringToEspFormatterParameters.TimestampFormat=$csvTimestampFormat&quot; &quot;-DCsvStringToEspFormatterParameters.HasHeader=$csvHasHeader&quot; &quot;-DCsvStringToEspFormatterParameters.ExpectStreamNameOpcode=$csvExpectStreamNameOpcode&quot;" 
+    />
+  </Special>
+  
+  <Section>
+    <!-- These parameters show up in the Sybase ESP Studio properties dialog -->
+    <Parameter id="csvDelimiter"
+	       label="Column Delimiter"
+	       descr="Symbol used to separate the columns"
+	       type="string"
+	       use="advanced"
+	       />
+	<Parameter id="csvDateFormat"
+	       label="Date Format"
+	       descr="Format string for parsing date values"
+	       type="string"
+	       use="advanced"
+	       />
+	<Parameter id="csvTimestampFormat"
+	       label="Timestamp Format"
+	       descr="Format string for parsing timestamp values"
+	       type="string"
+	       use="advanced"
+	       />
+	<Parameter id="csvTimeFormat"
+	       label="Time Format"
+	       descr="Format string for parsing time values"
+	       type="string"
+	       use="advanced"
+	       />	       
+    <Parameter id="csvHasHeader"
+	       label="Has Header"
+	       descr="Determines whether the first line of the file contains the description of the CSV fields"
+	       type="boolean"
+	       use="advanced"
+	       />
+    <Parameter id="csvExpectStreamNameOpcode"
+	       label="Stream name, opcode expected"
+	       descr="If set to true, the adapter interprets the first two fields of the incoming CSV line as stream name and opcode respectively. The adapter discards messages with unmatched stream names."
+	       type="boolean"
+	       use="optional"
+	       />
+    <Parameter id="dir"
+         label="Directory" 
+         descr="Location of the data files"
+         type="directory"
+	       use="optional"
+	       />
+	<Parameter id="file"
+         label="File (in Directory)" 
+         descr="File to read (wildcards are allowed)"
+	       type="tables"
+	       use="optional"
+		   default="*"
+	       />
+	<Parameter id="dynamicMode"
+	       label="Dynamic Loading Mode"
+	       descr="Dynamic mode for reading files. Valid values: static, dynamicFile, dynamicPath"
+	       type="string"
+	       use="optional"
+	       />
+	<Parameter id="pollingPeriod"
+	       label="Poll Period (seconds)"
+	       descr="Poll period when dynamicMode is 'dynamicFile' or 'dynamicPath'"
+	       type="int"
+	       use="advanced"
+	       />
+    <Parameter id="scanDepth"
+	       label="Scan Depth"
+	       descr="Specify the depth of the schema discovery. The adapter reads the number of rows specified by this parameter value when discovering the input data schema."
+	       type="uint"
+	       use="advanced"
+	       />
+    <Parameter id="removeAfterProcess"
+	       label="Remove Files After Processing"
+	       descr="Remove files after they have been processed"
+	       type="boolean"
+	       use="optional"
+	       />
+	<Parameter id="propertyset" 
+      label="propertyset" 
+      descr="to look up properties in project configuration"
+      type="string"
+      use="advanced"
+      default=""/>
+  </Section>
+</Adapter>

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Adapter type="output" external="true"
+  id="toolkit_socket_csv_output"
+  label="Socket CSV Output"
+  descr="Writes delimiter-formatted data to a socket"
+>
+  <Library file="simple_ext" type="binary"/>
+  
+  <Special>
+    <Internal id="x_initialOnly" 
+      label="Does Initial Loading Only" 
+      descr="Do initial loading, or the continuous loading"
+      type="boolean"
+      default="false"
+    />
+    <Internal id="x_addParamFile" 
+      label="Add Parameter File" 
+      type="boolean"
+      default="false"
+    />
+    <Internal id="x_killRetryPeriod" 
+      label="Period to repeat the stop command until the process exits" 
+      type="int"
+      default="0"
+    />
+	<Internal id="x_allocateLocalSessionId" 
+      label="Request a new local session id"
+      descr="Request the project to allocate a new local session id. Then, the adapter could connect to the project using the new local session id depending on the adapter's choice"	  
+      type="boolean"
+      default="true"
+    />
+
+    <!-- 
+	Start the out-of-process Sybase ESP Adapter.
+    -->
+    <Internal id="x_unixCmdExec" 
+      label="Execute Command" 
+      type="string"
+	  default="&quot;$ESP_HOME/adapters/framework/bin/start.sh&quot; &quot;$ESP_HOME/adapters/framework/instances/socket_csv_output/adapter_config.xml&quot; &quot;-DSocketOutputTransporterParameters.Host=$host&quot; &quot;-DSocketOutputTransporterParameters.Port=$port&quot; &quot;-DSocketOutputTransporterParameters.EpFile=$epFile&quot; &quot;-DSocketOutputTransporterParameters.RetryPeriod=$retryPeriod&quot; &quot;-DSocketOutputTransporterParameters.KeepAlive=$keepAlive&quot; &quot;-DStringToStreamFormatterParameters.CharsetName=$charsetName&quot; &quot;-DEspToCsvStringFormatterParameters.Delimiter=$csvDelimiter&quot; &quot;-DEspToCsvStringFormatterParameters.DateFormat=$csvDateFormat&quot; &quot;-DEspToCsvStringFormatterParameters.TimestampFormat=$csvTimestampFormat&quot; &quot;-DEspToCsvStringFormatterParameters.TimeFormat=$csvTimeFormat&quot; &quot;-DEspToCsvStringFormatterParameters.HasHeader=$csvHasHeader&quot; &quot;-DEspToCsvStringFormatterParameters.PrependStreamNameOpcode=$csvPrependStreamNameOpcode&quot;"
+    />
+    
+    <Internal id="x_winCmdExec" 
+      label="Execute Command" 
+      type="string"
+	  default="&quot;$ESP_HOME/adapters/framework/bin/start.bat&quot; &quot;$ESP_HOME/adapters/framework/instances/socket_csv_output/adapter_config.xml&quot; &quot;-DSocketOutputTransporterParameters.Host=$host&quot; &quot;-DSocketOutputTransporterParameters.Port=$port&quot; &quot;-DSocketOutputTransporterParameters.EpFile=$epFile&quot; &quot;-DSocketOutputTransporterParameters.RetryPeriod=$retryPeriod&quot; &quot;-DSocketOutputTransporterParameters.KeepAlive=$keepAlive&quot; &quot;-DStringToStreamFormatterParameters.CharsetName=$charsetName&quot; &quot;-DEspToCsvStringFormatterParameters.Delimiter=$csvDelimiter&quot; &quot;-DEspToCsvStringFormatterParameters.DateFormat=$csvDateFormat&quot; &quot;-DEspToCsvStringFormatterParameters.TimestampFormat=$csvTimestampFormat&quot; &quot;-DEspToCsvStringFormatterParameters.TimeFormat=$csvTimeFormat&quot; &quot;-DEspToCsvStringFormatterParameters.HasHeader=$csvHasHeader&quot; &quot;-DEspToCsvStringFormatterParameters.PrependStreamNameOpcode=$csvPrependStreamNameOpcode&quot;"
+    />
+
+    <Internal id="x_unixCmdStop" 
+      label="Stop Command" 
+      type="string"
+	  default="&quot;$ESP_HOME/adapters/framework/bin/stop.sh&quot; &quot;$ESP_HOME/adapters/framework/instances/socket_csv_output/adapter_config.xml&quot;"
+    />
+    <Internal id="x_winCmdStop" 
+      label="Stop Command" 
+      type="string"
+	  default="&quot;$ESP_HOME/adapters/framework/bin/stop.bat&quot; &quot;$ESP_HOME/adapters/framework/instances/socket_csv_output/adapter_config.xml&quot;"
+    />
+  </Special>
+  
+  <Section>
+    <!-- These parameters show up in the Sybase ESP Studio properties dialog -->
+	<Parameter id="csvDelimiter"
+	       label="Column Delimiter"
+	       descr="Symbol used to separate the columns"
+	       type="string"
+	       use="advanced"
+	       />
+	<Parameter id="csvDateFormat"
+	       label="Date Format"
+	       descr="Format string for parsing date values"
+	       type="string"
+	       use="advanced"
+	       />
+	<Parameter id="csvTimestampFormat"
+	       label="Timestamp Format"
+	       descr="Format string for parsing timestamp values"
+	       type="string"
+	       use="advanced"
+	       />
+	<Parameter id="csvTimeFormat"
+	       label="Time Format"
+	       descr="Format string for parsing time values"
+	       type="string"
+	       use="advanced"
+	       />	       
+    <Parameter id="csvHasHeader"
+	       label="Has Header"
+	       descr="Determines whether the first line of the file contains the description of the CSV fields"
+	       type="boolean"
+	       use="advanced"
+	       />
+    <Parameter id="csvPrependStreamNameOpcode"
+         label="Prepend stream name, opcode"
+	       descr="If set to true, the adapter prepends the stream name and the opcode in each row of data that is generated."
+	       type="boolean"
+	       use="optional"
+	       />
+	<Parameter id="charsetName"
+	       label="Charset Name"
+	       descr="Specify the name of a supported charset"
+	       type="string"
+	       use="advanced"
+	       />	
+	<Parameter id="host"
+	       label="Server"
+	       descr="Server host name"
+	       type="string"
+	       use="required"
+	       />
+	<Parameter id="port"
+	       label="Port"
+	       descr="Server port, or -1 to read from the Ephemeral Port File (see advanced parameters)"
+	       type="int"
+	       use="required"
+	       /> 
+    <Parameter id="epFile"
+	       label="Ephemeral Port File"
+	       descr="File that will contain the server port number, if Port is -1"
+	       type="filename"
+	       use="advanced"
+	       />		   
+	<Parameter id="retryPeriod"
+	       label="Retry Period (seconds)"
+	       descr="Period for trying to re-establish an outgoing connection (seconds)"
+	       type="uint"
+	       use="advanced"
+	       />
+	<Parameter id="keepAlive"
+	       label="Enable TCP keepalive"
+	       descr="Enable TCP keepalive on the socket connection"
+	       type="boolean"
+	       use="advanced"
+	       />
+	<Parameter id="propertyset" 
+      label="propertyset" 
+      descr="to look up properties in project configuration"
+      type="string"
+      use="advanced"
+      default=""/>
+  </Section>
+</Adapter>

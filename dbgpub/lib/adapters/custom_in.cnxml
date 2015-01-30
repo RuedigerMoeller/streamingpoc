@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Adapter type="input"
+  id="custom_in"
+  label="Custom Input"
+  descr="Dummy Custom Input Adapter"
+>
+<Library file="custom_in" type="binary"/>
+<Special>
+</Special>
+<Section>
+    <Parameter id="RowCount"
+      label="RowCount"
+      descr="How many rows to generate"
+      type="uint"
+      use="required"
+      default="10"/>      	  
+ </Section>
+</Adapter>

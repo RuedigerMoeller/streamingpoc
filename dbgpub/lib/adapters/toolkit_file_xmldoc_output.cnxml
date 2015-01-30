@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Adapter type="output" external="true"
+  id="toolkit_file_xmldoc_output"
+  label="File/Hadoop XML Output"
+  descr="Writes XML-formatted data to a file or Hadoop Distributed File System"
+>
+  <Library file="simple_ext" type="binary"/>
+  
+  <Special>
+    <Internal id="x_initialOnly" 
+      label="Does Initial Loading Only" 
+      descr="Do initial loading, or the continuous loading"
+      type="boolean"
+      default="false"
+    />
+    <Internal id="x_addParamFile" 
+      label="Add Parameter File" 
+      type="boolean"
+      default="false"
+    />
+    <Internal id="x_killRetryPeriod" 
+      label="Period to repeat the stop command until the process exits" 
+      type="int"
+      default="0"
+    />
+	<Internal id="x_allocateLocalSessionId" 
+      label="Request a new local session id"
+      descr="Request the project to allocate a new local session id. Then, the adapter could connect to the project using the new local session id depending on the adapter's choice"	  
+      type="boolean"
+      default="true"
+    />
+
+    <!-- 
+	Start the out-of-process Sybase ESP Adapter.
+    -->
+    <Internal id="x_unixCmdExec" 
+      label="Execute Command" 
+      type="string"
+	  default="&quot;$ESP_HOME/adapters/framework/bin/start.sh&quot; &quot;$ESP_HOME/adapters/framework/instances/file_xmldoc_output/adapter_config.xml&quot; &quot;-DEspToXmlDocStringFormatterParameters.XMLSchemaFilePath=$xmlSchemaFilePath&quot; &quot;-DEspToXmlDocStringFormatterParameters.GlobalElementLocalName=$globalElementLocalName&quot; &quot;-DEspToXmlDocStringFormatterParameters.ColsMapping.Column=$espColumnPattern&quot; &quot;-DFileOutputTransporterParameters.Dir=$dir&quot; &quot;-DFileOutputTransporterParameters.File=$file&quot; &quot;-DFileOutputTransporterParameters.AppendMode=$appendMode&quot; &quot;-DFileOutputTransporterParameters.FileSizeLimit=$fileSizeLimit&quot; &quot;-DFileOutputTransporterParameters.TimeBasedRotate=$timeBasedRotate&quot; &quot;-DFileOutputTransporterParameters.TimeBasedRotateInterval=$timeBasedRotateInterval&quot; &quot;-DFileOutputTransporterParameters.TimeBasedRotateStartAt=$timeBasedRotateStartAt&quot; &quot;-DFileOutputTransporterParameters.TimestampInFilenames=$timestampInFilenames&quot; &quot;-DFileOutputTransporterParameters.TimestampInFilenamesFormat=$timestampInFilenamesFormat&quot; &quot;-DFileOutputTransporterParameters.BatchSize=$BatchSize&quot; &quot;-DFileOutputTransporterParameters.BatchPeriod=$BatchPeriod&quot; &quot;-DEspSubscriberParameters.EnableGdMode=$EnableGdMode&quot; &quot;-DEspSubscriberParameters.EnableGdCache=$EnableGdCache&quot; &quot;-DEspSubscriberParameters.GdSubscriberName=$GdSubscriberName&quot;"
+    />
+    
+    <Internal id="x_winCmdExec" 
+      label="Execute Command" 
+      type="string"
+	  default="&quot;$ESP_HOME/adapters/framework/bin/start.bat&quot; &quot;$ESP_HOME/adapters/framework/instances/file_xmldoc_output/adapter_config.xml&quot; &quot;-DEspToXmlDocStringFormatterParameters.XMLSchemaFilePath=$xmlSchemaFilePath&quot; &quot;-DEspToXmlDocStringFormatterParameters.GlobalElementLocalName=$globalElementLocalName&quot; &quot;-DEspToXmlDocStringFormatterParameters.ColsMapping.Column=$espColumnPattern&quot; &quot;-DFileOutputTransporterParameters.Dir=$dir&quot; &quot;-DFileOutputTransporterParameters.File=$file&quot; &quot;-DFileOutputTransporterParameters.AppendMode=$appendMode&quot; &quot;-DFileOutputTransporterParameters.FileSizeLimit=$fileSizeLimit&quot; &quot;-DFileOutputTransporterParameters.TimeBasedRotate=$timeBasedRotate&quot; &quot;-DFileOutputTransporterParameters.TimeBasedRotateInterval=$timeBasedRotateInterval&quot; &quot;-DFileOutputTransporterParameters.TimeBasedRotateStartAt=$timeBasedRotateStartAt&quot; &quot;-DFileOutputTransporterParameters.TimestampInFilenames=$timestampInFilenames&quot; &quot;-DFileOutputTransporterParameters.TimestampInFilenamesFormat=$timestampInFilenamesFormat&quot; &quot;-DFileOutputTransporterParameters.BatchSize=$BatchSize&quot; &quot;-DFileOutputTransporterParameters.BatchPeriod=$BatchPeriod&quot; &quot;-DEspSubscriberParameters.EnableGdMode=$EnableGdMode&quot; &quot;-DEspSubscriberParameters.EnableGdCache=$EnableGdCache&quot; &quot;-DEspSubscriberParameters.GdSubscriberName=$GdSubscriberName&quot;"
+    />
+
+    <Internal id="x_unixCmdStop" 
+      label="Stop Command" 
+      type="string"
+	  default="&quot;$ESP_HOME/adapters/framework/bin/stop.sh&quot; &quot;$ESP_HOME/adapters/framework/instances/file_xmldoc_output/adapter_config.xml&quot;"
+    />
+    <Internal id="x_winCmdStop" 
+      label="Stop Command" 
+      type="string"
+	  default="&quot;$ESP_HOME/adapters/framework/bin/stop.bat&quot; &quot;$ESP_HOME/adapters/framework/instances/file_xmldoc_output/adapter_config.xml&quot;"
+    />
+  </Special>
+  
+  <Section>
+    <!-- These parameters show up in the Sybase ESP Studio properties dialog -->
+    <Parameter id="dir"
+         label="Directory" 
+         descr="Location of the data files"
+         type="directory"
+	       use="optional"
+	       />
+	<Parameter id="file"
+         label="File (in Directory)" 
+	       descr="File to write"
+	       type="string"
+	       use="required"
+	       />
+	<Parameter id="appendMode"
+	       label="Append Data"
+	       descr="Whether data should be appended to an existing file"
+	       type="boolean"
+	       use="advanced"
+	       />   
+	<Parameter id="xmlSchemaFilePath"
+	       label="XML Schema Document"
+	       descr="The XML schema document, on which the generated XML document is based"
+	       type="filename"
+	       use="required"
+	       />
+	<Parameter id="globalElementLocalName"
+	       label="Local Name of XSD Global Element"
+	       descr="The local name of a global element in the XML schema document"
+	       type="string"
+	       use="required"
+	       />
+	<Parameter id="espColumnPattern"
+	       label="Column Expression List"
+	       descr="Comma-separated list of XPath expressions for mapping ESP columns to XML elements. If the XML element used in an expression belongs to a namespace, specify the namespace in the expression"
+	       type="string"
+	       use="required"
+	       />
+	<Parameter id="fileSizeLimit"
+		   label="File Size Limit" 
+	       descr="The maximum size in bytes of the output CSV files before rotation"
+	       type="int"
+	       use="advanced"
+	       />
+	<Parameter id="timeBasedRotate"
+           label="Time Based Rotate" 
+	       descr="Rotate files at predetermined time intervals"
+	       type="boolean"
+	       use="advanced"
+	       />
+	<Parameter id="timeBasedRotateInterval"
+           label="Time Based Rotate Interval" 
+	       descr="The interval to wait between file rotations in seconds"
+	       type="int"
+	       use="advanced"
+	       />
+	<Parameter id="timeBasedRotateStartAt"
+           label="Time Based Rotate Start At" 
+	       descr="The time of the first rotation"
+	       type="string"
+	       use="advanced"
+	       />
+	<Parameter id="timestampInFilenames"
+           label="Time Stamp in File Names" 
+	       descr="Append the system time in the output file to the filename"
+	       type="boolean"
+	       use="advanced"
+	       />
+	<Parameter id="timestampInFilenamesFormat"
+           label="Time Stamp in File Names Format" 
+	       descr="The format of the time stamp in the output files"
+	       type="string"
+	       use="advanced"
+	       />
+    <Parameter id="BatchSize"
+               label="Batch Size"
+               descr="Specify every how many rows shall adapter perform a commit"
+               type="int"
+               use="advanced"
+               default="1"
+    />			   
+    <Parameter id="BatchPeriod"
+               label="Batch Period"
+               descr="Specify every how many seconds shall adapter perform a commit"
+               type="int"
+               use="advanced"
+               default="0"
+    />
+	<Parameter id="propertyset" 
+      label="propertyset" 
+      descr="to look up properties in project configuration"
+      type="string"
+      use="advanced"
+      default=""/>
+	<Parameter id="EnableGdMode"
+         label="Enable Gd mode"
+	       descr="Specifies whether the adapter runs in guaranteed delivery (GD) mode."
+	       type="boolean"
+	       use="advanced"
+	       />
+	<Parameter id="EnableGdCache"
+         label="Enable Gd Cache"
+	       descr="If set to true, only rows that can be recovered by the ESP Server on restart are sent to the end source. Other rows are cached internally by the adapter."
+	       type="boolean"
+	       use="advanced"
+	       />
+	<Parameter id="GdSubscriberName"
+         label="Gd Subscriber Name"
+	       descr="Specify a unique name to identify the GD subscription client."
+	       type="string"
+	       use="advanced"
+	       />
+  </Section>
+</Adapter>

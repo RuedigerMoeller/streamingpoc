@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Adapter type="output" external="true"
+  id="toolkit_ftp_xmllist_output"
+  label="FTP Event XML Output"
+  descr="Writes XML-formatted event data to FTP"
+>
+  <Library file="simple_ext" type="binary"/>
+  
+  <Special>
+    <Internal id="x_initialOnly" 
+      label="Does Initial Loading Only" 
+      descr="Do initial loading, or the continuous loading"
+      type="boolean"
+      default="false"
+    />
+    <Internal id="x_addParamFile" 
+      label="Add Parameter File" 
+      type="boolean"
+      default="false"
+    />
+    <Internal id="x_killRetryPeriod" 
+      label="Period to repeat the stop command until the process exits" 
+      type="int"
+      default="0"
+    />
+	<Internal id="x_allocateLocalSessionId" 
+      label="Request a new local session id"
+      descr="Request the project to allocate a new local session id. Then, the adapter could connect to the project using the new local session id depending on the adapter's choice"	  
+      type="boolean"
+      default="true"
+    />
+
+    <!-- 
+	Start the out-of-process Sybase ESP Adapter.
+    -->
+    <Internal id="x_unixCmdExec" 
+      label="Execute Command" 
+      type="string"
+	  default="&quot;$ESP_HOME/adapters/framework/bin/start.sh&quot; &quot;$ESP_HOME/adapters/framework/instances/ftp_xmllist_output/adapter_config.xml&quot; &quot;-DFtpOutputTransporterParameters.Host=$host&quot; &quot;-DFtpOutputTransporterParameters.Port=$port&quot; &quot;-DFtpOutputTransporterParameters.LoginType=$loginType&quot; &quot;-DFtpOutputTransporterParameters.User=$user&quot; &quot;-DFtpOutputTransporterParameters.Password=$password&quot; &quot;-DFtpOutputTransporterParameters.FtpFileName=$ftpFileName&quot; &quot;-DFtpOutputTransporterParameters.FtpFilePath=$ftpFilePath&quot; &quot;-DFtpOutputTransporterParameters.TransferMode=$transferMode&quot; &quot;-DFtpOutputTransporterParameters.Overwrite=$overwrite&quot; &quot;-DFtpOutputTransporterParameters.RetryPeriod=$retryPeriod&quot; &quot;-DFtpOutputTransporterParameters.RetryNumber=$retryNumber&quot; &quot;-DStringToStreamFormatterParameters.CharsetName=$charsetName&quot; &quot;-DEspToXmlStringFormatterParameters.DateFormat=$xmllistDateFormat&quot; &quot;-DEspToXmlStringFormatterParameters.TimestampFormat=$xmllistTimestampFormat&quot; &quot;-DEspToXmlStringFormatterParameters.TimeFormat=$xmllistTimeFormat&quot;"
+    />
+    
+    <Internal id="x_winCmdExec" 
+      label="Execute Command" 
+      type="string"
+	  default="&quot;$ESP_HOME/adapters/framework/bin/start.bat&quot; &quot;$ESP_HOME/adapters/framework/instances/ftp_xmllist_output/adapter_config.xml&quot; &quot;-DFtpOutputTransporterParameters.Host=$host&quot; &quot;-DFtpOutputTransporterParameters.Port=$port&quot; &quot;-DFtpOutputTransporterParameters.LoginType=$loginType&quot; &quot;-DFtpOutputTransporterParameters.User=$user&quot; &quot;-DFtpOutputTransporterParameters.Password=$password&quot; &quot;-DFtpOutputTransporterParameters.FtpFileName=$ftpFileName&quot; &quot;-DFtpOutputTransporterParameters.FtpFilePath=$ftpFilePath&quot; &quot;-DFtpOutputTransporterParameters.TransferMode=$transferMode&quot; &quot;-DFtpOutputTransporterParameters.Overwrite=$overwrite&quot; &quot;-DFtpOutputTransporterParameters.RetryPeriod=$retryPeriod&quot; &quot;-DFtpOutputTransporterParameters.RetryNumber=$retryNumber&quot; &quot;-DStringToStreamFormatterParameters.CharsetName=$charsetName&quot; &quot;-DEspToXmlStringFormatterParameters.DateFormat=$xmllistDateFormat&quot; &quot;-DEspToXmlStringFormatterParameters.TimestampFormat=$xmllistTimestampFormat&quot; &quot;-DEspToXmlStringFormatterParameters.TimeFormat=$xmllistTimeFormat&quot;"
+    />
+
+    <Internal id="x_unixCmdStop" 
+      label="Stop Command" 
+      type="string"
+	  default="&quot;$ESP_HOME/adapters/framework/bin/stop.sh&quot; &quot;$ESP_HOME/adapters/framework/instances/ftp_xmllist_output/adapter_config.xml&quot;"
+    />
+    <Internal id="x_winCmdStop" 
+      label="Stop Command" 
+      type="string"
+	  default="&quot;$ESP_HOME/adapters/framework/bin/stop.bat&quot; &quot;$ESP_HOME/adapters/framework/instances/ftp_xmllist_output/adapter_config.xml&quot;"
+    />
+
+  </Special>
+  
+  <Section>
+    <!-- These parameters show up in the Sybase ESP Studio properties dialog -->
+    <Parameter id="xmllistDateFormat"
+	       label="Date Format"
+	       descr="Format string for parsing date values"
+	       type="string"
+	       use="advanced"
+	       />
+	<Parameter id="xmllistTimestampFormat"
+	       label="Timestamp Format"
+	       descr="Format string for parsing timestamp values"
+	       type="string"
+	       use="advanced"
+	       />	
+	<Parameter id="xmllistTimeFormat"
+	       label="Time Format"
+	       descr="Format string for parsing time values"
+	       type="string"
+	       use="advanced"
+	       />		       
+	<Parameter id="charsetName"
+	       label="Charset Name"
+	       descr="Specify the name of a supported charset"
+	       type="string"
+	       use="advanced"
+	       />
+	<Parameter id="host"
+		label="Host"
+		descr="The server name or IP address of the FTP server to which you are connecting"
+		type="string"
+		use="required"
+		/>
+		
+	<Parameter id="port"
+		label="Port"
+		descr="The port for the FTP server to which you are connecting"
+		type="uint"
+		use="required"
+	  default="21"
+		/>
+		
+	<Parameter id="loginType"
+		label="Login Type"
+		descr="The login type for the FTP server. Valid values: normal, anonymous"
+		type="string"
+		use="required"
+	  default="normal"
+	  />
+		
+	<Parameter id="user"
+		label="User"
+		descr="The login account for the FTP server (required if LoginType is set to normal)"
+		type="string"
+		use="optional"
+		/>
+		
+	<Parameter id="password"
+		label="Password"
+		descr="The login password for the FTP server (required if LoginType is set to normal) "
+		type="string"
+		use="optional"
+		/>
+		
+	<Parameter id="ftpFileName"
+		label="File Name"
+		descr="The filename of the data file on the FTP server"
+		type="string"
+		use="required"
+		/>
+		
+	<Parameter id="ftpFilePath"
+		label="File Path"
+		descr="The absolute path to the data file on the FTP server"
+		type="string"
+		use="required"
+		/>
+		
+	<Parameter id="transferMode"
+		label="Transfer Mode"
+		descr="The transfer mode for the FTP connection. Valid values: active, passive"
+		type="string"
+	  use="optional"
+	  />
+		
+	<Parameter id="overwrite"
+		label="Over Write"
+		descr="If set to true, the transporter overwrites the file on the FTP server, if it exists. If this parameter is set to false, the transporter appends the output to the end of the existing file."
+		type="boolean"
+		use="optional"
+		/>
+		
+	<Parameter id="retryPeriod"
+		label="Retry Period"
+		descr="The period of time, in seconds, to try and reconnect to the FTP server if you disconnect unexpectedly"
+		type="uint"
+		use="optional"
+		/>
+		
+	<Parameter id="retryNumber"
+		label="Retry Count"
+		descr="The number of times to try to reconnect to the FTP server if you disconnect unexpectedly"
+		type="uint"
+		use="optional"
+		/>
+	<Parameter id="propertyset" 
+	      label="propertyset" 
+	      descr="to look up properties in project configuration"
+	      type="string"
+	      use="advanced"
+      	  default=""
+      	 />
+  </Section>
+</Adapter>

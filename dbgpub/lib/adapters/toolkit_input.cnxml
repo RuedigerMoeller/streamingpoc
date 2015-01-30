@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Adapter type="input" external="true"
+  id="toolkit_input"
+  label="Toolkit Input Adapter"
+  descr="Adapter toolkit input adapter"
+>
+  <Library file="simple_ext" type="binary"/>
+  
+  <Special>
+    <Internal id="x_initialOnly" 
+      label="Does Initial Loading Only" 
+      descr="Do initial loading, or the continuous loading"
+      type="boolean"
+      default="false"
+    />
+    <Internal id="x_addParamFile" 
+      label="Add Parameter File" 
+      type="boolean"
+      default="false"
+    />
+    <Internal id="x_killRetryPeriod" 
+      label="Period to repeat the stop command until the process exits" 
+      type="int"
+      default="0"
+    />
+	<Internal id="x_allocateLocalSessionId" 
+      label="Request a new local session id"
+      descr="Request the project to allocate a new local session id. Then, the adapter could connect to the project using the new local session id depending on the adapter's choice"	  
+      type="boolean"
+      default="true"
+    />
+
+    <!-- 
+	Start the out-of-process Sybase ESP Adapter.
+    -->
+    <Internal id="x_unixCmdExec" 
+      label="Execute Command" 
+      type="string"
+	  default="&quot;$ESP_HOME/adapters/framework/bin/start.sh&quot; &quot;$configFilePath&quot;"
+    />
+    
+    <Internal id="x_winCmdExec" 
+      label="Execute Command" 
+      type="string"
+	  default="&quot;$ESP_HOME/adapters/framework/bin/start.bat&quot; &quot;$configFilePath&quot;"
+    />
+
+    <Internal id="x_unixCmdStop" 
+      label="Stop Command" 
+      type="string"
+	  default="&quot;$ESP_HOME/adapters/framework/bin/stop.sh&quot; &quot;$configFilePath&quot;"
+    />
+    <Internal id="x_winCmdStop" 
+      label="Stop Command" 
+      type="string"
+	  default="&quot;$ESP_HOME/adapters/framework/bin/stop.bat&quot; &quot;$configFilePath&quot;"
+    />
+
+    <!--
+	Data discovery. 
+	The command below will have '-o "<temp file>"' added to it. It 
+	will write the discovered data in this file.
+     -->
+    <Internal id="x_unixCmdDisc" 
+      label="Discovery Command" 
+      type="string"
+	  default="&quot;$ESP_HOME/adapters/framework/bin/discover.sh&quot; &quot;$configFilePath&quot;" 
+    />
+    <Internal id="x_winCmdDisc" 
+      label="Discovery Command" 
+      type="string"
+	  default="&quot;$ESP_HOME/adapters/framework/bin/discover.bat&quot; &quot;$configFilePath&quot;" 
+    />
+  </Special>
+  
+  <Section>
+    <!-- These parameters show up in the Sybase ESP Studio properties dialog -->
+	<Parameter id="configFilePath"
+	       label="Adapter Configuration File"
+	       descr="Path to the adapter configuration file"
+	       type="filename"
+	       use="required"
+	 />
+  </Section>
+</Adapter>
