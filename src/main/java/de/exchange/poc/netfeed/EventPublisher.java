@@ -124,7 +124,7 @@ public class EventPublisher {
 
         pub.initFastCast();
         while (true)
-            pub.run( 27_000, 1_000_000 ); // 93_000 = 10k, 27_000 = 30k, 10_500 = 70k, 4_900 = 140k
+            pub.run( 2000, 4_000_000 ); // 93_000 = 10k, 29_000 = 30k, 10_500 = 70k, 4_900 = 140k, 45_000 = 20k
 
     }
 
