@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Adapter type="input"
+  id="dsv_in"
+  label="File CSV Input (deprecated)"
+  descr="Reads delimiter-separated data from a file"
+>
+  <Library file="text_in" type="binary"/>
+  <Special>
+    <Internal id="format" 
+      label="Data Format" 
+      type="string"
+      default="dsv"
+    />
+    <Internal id="srcType" 
+      label="Source Type" 
+      type="string"
+      default="file"
+    />
+    <Internal id="debugDumpTo" 
+      label="" 
+      type="string"
+      default="-"
+    />
+    <Internal id="isDeprecated" 
+      label="isDeprecated" 
+      type="boolean"
+      default="true"
+    />
+  </Special>
+  <Section>
+   <Parameter id="dynamicMode" 
+      label="Dynamic Loading" 
+      descr="Run the adapter in dynamic mode."
+      type="boolean"
+      use="optional"
+      default="false"
+    />
+    <Parameter id="delimiter" 
+      label="Delimiter" 
+      descr="Symbol used to separate the columns"
+      type="string"
+      use="advanced"
+      default=","
+    />
+    <Parameter id="hasHeader" 
+      label="Has Header" 
+      descr="Whether the first line of the file contains the description of the fields"
+      type="boolean"
+      use="advanced"
+      default="false"
+    />
+    <Parameter id="expectStreamNameOpcode"
+      label="Stream name, opcode expected"
+      descr="If true, the first two fields in CSV records are interpreted as stream name, opcode"
+      type="boolean"
+      use="optional"
+      default="false"
+    />
+    <Parameter id="fieldCount"
+      label="Field Count"
+      descr="Count of fields in CSV file, if different from the source stream, or 0 for default"
+      type="uint"
+      use="optional"
+      default="0"
+    />
+    <Parameter id="dir" 
+      label="Directory" 
+      descr="Location of the data files"
+      type="directory"
+      use="required"
+    /> 
+	
+	<Parameter id="file" 
+      label="File (in Directory)" 
+      descr="File to read"
+      type="tables"
+      use="optional"
+    />
+    <Parameter id="runtimeDir" 
+      label="Directory (runtime)" 
+      descr="Location of the data files at run time, if different from discovery time"
+      type="runtimeDirectory"
+      use="advanced"
+      discoveryOf="dir"
+    /> 
+    <Parameter id="filePattern" 
+      label="File Pattern" 
+      descr="Pattern to look up files for discovery and dynamic loading"
+      type="string"
+      use="advanced"
+      default="*.csv"
+    /> 
+	<Parameter id="fileRegex" 
+      label="Regular Expression" 
+      descr="Regular expression to look up files only in dynamic loading. Overrides file pattern if both are specified."
+      type="string"
+      use="optional"
+      default=""
+    /> 
+	<Parameter id="removeAfterProcess" 
+      label="Remove File After Processing" 
+      descr="Delete file after it is processed. (Dynamic mode only.)"
+      type="boolean"
+      use="optional"
+      default="false"
+    />
+	<Parameter id="reprocess" 
+      label="Reprocess File" 
+      descr="Reprocess the file when modified. Can only be set if 'removeAfterProcess' is false."
+      type="boolean"
+      use="optional"
+      default="false"
+    />
+	
+  </Section>
+  <Section>
+    <Parameter id="pollperiod" 
+      label="Poll Period (seconds)" 
+      descr="Period for polling for new contents in a file. Unit is seconds."
+      type="uint"
+      use="advanced"
+	  default="0"
+    />
+	<Parameter id="dirpollperiod" 
+      label="Directory Poll Period (seconds)" 
+      descr="Period for polling directory in dynamic mode.Unit is seconds."
+      type="uint"
+      use="advanced"
+	  default="60"
+    />
+    <Parameter id="safeOps" 
+      label="Convert to Safe Opcodes" 
+      descr="Convert the opcodes INSERT and UPDATE to UPSERT, DELETE to SAFEDELETE"
+      type="boolean"
+      use="advanced"
+      default="false"
+    />
+    <Parameter id="skipDels" 
+      label="Skip Deletes" 
+      descr="Skip the rows with opcodes DELETE or SAFEDELETE"
+      type="boolean"
+      use="advanced"
+      default="false"
+    />
+    <Parameter id="dateFormat" 
+      label="Date Format" 
+      descr="Format string for parsing date values"
+      type="string"
+      use="advanced"
+      default="%Y-%m-%dT%H:%M:%S"
+    />
+	<Parameter id="timeFormat"
+	  label="Time Format"
+	  descr="Format string for parsing time values"
+	  type="string"
+	  use="advanced"
+	  default="%H:%M:%S"
+	/>
+    <Parameter id="timestampFormat" 
+      label="Timestamp Format" 
+      descr="Format string for parsing timestamp values"
+      type="string"
+      use="advanced"
+      default="%Y-%m-%dT%H:%M:%S"
+    />
+    <Parameter id="blockSize" 
+      label="Block Size" 
+      descr="Number of records to block into one pseudo-transaction"
+      type="int"
+      use="advanced"
+      default="1"
+    />
+    <Parameter id="useEnvelopes"
+      label="Use envelopes"
+      descr="Use envelopes instead of transaction blocks"
+      type="boolean"
+      use="advanced"
+      default="false"/>
+    <Parameter id="permutation" 
+      label="Field Mapping" 
+      descr="Mapping between the in-platform and external fields"
+      type="permutation"
+      use="advanced"
+    />
+    <Parameter id="propertyset" 
+      label="propertyset" 
+      descr="to look up properties in project configuration"
+      type="string"
+      use="advanced"
+      default=""/>  	
+    <Parameter id="repeatCount" 
+     label="Repeat Data Field Count"
+	 descr="Number of times the input data is repeated. If set to -1, the input data will be repeated indefinitely."	
+     type="int"
+     default="0"
+     use="optional"
+    />
+    <Parameter id="repeatField" 
+	 label="Repeat Data Field Name"
+     descr="On each repeat, bump the value in this field. Stream column name needs to be specified if repeatCount has a non-zero value"
+     type="string"
+     default="-"
+     use="optional"
+    />
+
+  </Section>
+</Adapter>

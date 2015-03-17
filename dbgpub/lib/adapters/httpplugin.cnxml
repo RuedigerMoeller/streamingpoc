@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Adapter type="output" external="true"
+  id="httpplugin"
+  label="HTTP Adapter (external)"
+  descr="Reads data via HTTP"
+>
+
+ <Library file="simple_ext" type="binary"/>
+
+ <Special>
+  <Internal id="x_unixCmdExec" 
+        label="Start Command" 
+        type="string"
+        default="&quot;$+{remoteBaseDir=?$baseDir:$remoteBaseDir}/bin/adapter.sh&quot; &quot;$+{remoteConfigFilePath=?$configFilePath:$remoteConfigFilePath}&quot; start &quot;espProjectUri=$projectUri&quot;"
+  />
+  <Internal id="x_winCmdExec" 
+      label="Start Command" 
+      type="string"
+        default="&quot;$+{remoteBaseDir=?$baseDir:$remoteBaseDir}\\bin\\adapter.bat&quot; &quot;$+{remoteConfigFilePath=?$configFilePath:$remoteConfigFilePath}&quot; start &quot;espProjectUri=$projectUri&quot;"
+  />
+  <Internal id="x_unixCmdStop" 
+        label="Stop Command" 
+        type="string"
+        default="&quot;$+{remoteBaseDir=?$baseDir:$remoteBaseDir}/bin/adapter.sh&quot; &quot;$+{remoteConfigFilePath=?$configFilePath:$remoteConfigFilePath}&quot; stop"
+  />
+  <Internal id="x_winCmdStop" 
+      label="Stop Command" 
+      type="string"
+        default="&quot;$+{remoteBaseDir=?$baseDir:$remoteBaseDir}\\bin\\adapter.bat&quot; &quot;$+{remoteConfigFilePath=?$configFilePath:$remoteConfigFilePath}&quot; stop"
+  />
+ </Special>
+
+ <Section>
+  <Parameter id="baseDir"
+        label="Adapter Directory Path" 
+        descr="Path to the Adapter base directory"
+        type="directory"
+        use="required"
+  />
+  <Parameter id="configFilePath"
+        label="Configuration File Path"
+        descr="Absolute path of the Adapter configuration file"
+        type="configFilename"
+        use="required"
+  />
+  <Parameter id="remoteBaseDir"
+        label="Adapter Remote Directory Path" 
+        descr="Path to the Adapter remote base directory (remote execution)"
+        type="string"
+        use="advanced"
+        default=""
+  />
+  <Parameter id="remoteConfigFilePath"
+        label="Remote Configuration File Path"
+        descr="Absolute path of the Adapter configuration file (remote execution)"
+        type="string"
+        use="advanced"
+        default=""
+  />
+   <Parameter id="propertyset" 
+      label="propertyset" 
+      descr="to look up properties in project configuration"
+      type="string"
+      use="advanced"
+      default=""/>  
+
+  <Parameter id="projectUri"
+	label="Project URI"
+	descr="URI to connect to a project in cluster env."
+	type="string"
+	default=""
+	use="advanced"
+	/>   
+ </Section>
+
+</Adapter>

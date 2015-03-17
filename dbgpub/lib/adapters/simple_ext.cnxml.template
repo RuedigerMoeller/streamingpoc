@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The binary part of this Adapter doesn't even care
+    if it's an input or output Adapter! It's going to
+    be whatever you say in the .cnxml file
+-->
+<Adapter type="input" external="true"
+  id="simple_ext"
+  label="Sample External Adapter"
+  descr="Example of a simple external Adapter, a base to make your own"
+>
+  <Library file="simple_ext" type="binary"/>
+  <Section>
+    <!-- Parameter names starting from x_ control the behavior
+        of the generic simple external Adapter. The rest of parameters
+        will be passed to the Adapter itself, written into the
+        parameter file in one of the supported formats.
+        In a custom .cnxml for a particular Adapter you may want
+        to make the x_ parameters the elements <Internal>
+        instead if <Parameter> - they would be in <Special> instead of <Section>.
+    -->
+    <!-- A number of extra parameters are added to the 
+        parameter file to specify the connection to the platform:
+            platformHost  - name of the host where the platform runs
+            platformCommandPort - number of the platform control port
+            platformSsl - 1 if SSL is used, 0 otherwise
+            platformSqlPort - number of the platform sql port
+            platformAuth - authentication of the platform, one of 
+                "none", "pam", "rsa", "gssapi"
+            platformStream - stream on which this Adapter runs
+            platformConnection - name of this Adapter
+        Those parameters are not visible in Studio, and Studio
+        has no knowledge of them. The binary part of the Adapter
+        receives this info from inside the platform and adds it
+        automatically.
+    -->
+    <!-- 
+        Some parameters, such as command names, get processed with 
+        substitutions. The references to the environment variables
+        and parameters get replaced with their values.
+
+        The substitution syntax is like in shell (independently of whether
+        the program is running on Unix or Windows) but with conditional extensions:
+        
+          $name
+          ${name}
+          ${name=value?substitution[:substitution]}
+          ${name<>value?substitution[:substitution]}
+          ${name!=value?substitution[:substitution]}
+          ${name==value?substitution[:substitution]}
+          ${name<value?substitution[:substitution]}
+          ${name<=value?substitution[:substitution]}
+          ${name>value?substitution[:substitution]}
+          ${name>=value?substitution[:substitution]}
+       
+        And all of the forms with {} may have a "+" added after "$":
+          $+{name}
+          etc.
+        Presence of "+" means that the result of the substitution will be
+        parsed again and any values in it substituted.
+       
+        "\" shields the next character.
+        
+        The conditional expression compare the value of a parameter
+        with a constant value and paste either the first substitution
+        on success or second substitution on failure. All the non-equality
+        comparisons, "==" and "!=" try to convert the values to numbers
+        and compare them as numbers. "=" and "<>" compare as strings.
+        Any characters like "?", ":" and "}" in the values must be shielded with "\".
+        The characters "{" and "}" in the substitutions must be balanced,
+        all the unbalanced ones must be shielded with "\".
+        The quote characters are NOT treated as special.
+        
+        With $+{...} the substitutions may contain references to other variables.
+        This is implemented by passing the result of a substitution through
+        one more round of substitution. The consequence is that extra layers of "\"
+        may be needed for shielding. For example, the string
+          $+{name=?\\\\}
+        would produce one "\" if the parameter "name" is empty. On the first pass
+        each pair of backslashes is turned into one backslash, and then on the
+        second pass "\\" turns into a single backslash.
+       
+        Special substitution syntax for Windows convenience:
+          $/{value}
+          $+/{value}
+        Replaces all the forward slashes in the value by backward slashes,
+        for convenience of specifying the Windows paths that otherwise
+        would have to have all the slashes escaped. 
+          $%{value}
+          $+%{value}
+        Replaces all the '%' with '%%' as escaping for Windows.
+
+        If the resulting string is passed to shell or cmd.exe for execution,
+        shell or cmd.exe would do their own substitution too!
+    -->
+
+    <!-- 
+        Parameter file name has the parameters and environment variables substituted.
+        For example, "$platformCommandPort" can be used to create the unique
+        file names at run time, like 
+        "/tmp/mymodel.$platformStream.$platformConnector.$platformCommandPort.cfg".
+    -->
+    <Parameter id="x_paramFile" 
+      label="Parameter File" 
+      descr="File to write the parameters into, to pass to the external process"
+      type="filename"
+      use="advanced"
+    />
+    <Parameter id="x_paramFormat" 
+      label="Parameter File Format" 
+      descr="Format, in which the external process expects the parameters"
+      type="choice"
+      use="advanced"
+      default="prop"
+    >
+      <ValueList>
+          <Value value="prop" label="Java properties"/>
+          <Value value="shell" label="Unix shell assignments"/>
+          <Value value="xml" label="Simple XML"/>
+      </ValueList>
+    </Parameter>
+    <!-- 
+        Note that x_initialOnly type is not boolean but string. This is done
+        to allow the parameter substitution in its value, to let it be calculated
+        as a dependency on the other parameters.
+        The value "true" means that th Adapter does the initial loading,
+        any other that it does the continuous loading.
+    -->
+    <Parameter id="x_initialOnly" 
+      label="Does Initial Loading Only" 
+      descr="Whether the Adapter does only the initial loading, or the continuous loading"
+      type="string"
+      use="required"
+      default="false"
+    />
+    <!-- The value of x_paramFile may be added to all x_cmd* strings as a command argument.
+        So for example if you specify the command as "cmd -f", the actually executed
+        command will be "cmd -f value-of-param-file". 
+    -->
+    <Parameter id="x_addParamFile" 
+      label="Add Parameter File" 
+      descr="If set to true, the path of the parameter file will be added to all the commands"
+      type="boolean"
+      use="advanced"
+      default="true"
+    />
+    <!-- All the commands can be given in 2 formats: for Unix and for
+        Windows. This is because the ways to specify the paths, environment
+        variables and script files are so radically different on Windows 
+        and Unix. Since the Adapter knows, on which OS it runs, it will
+        pick the right version of command.
+
+        All the commands have the parameters and environment variables substituted.
+        Note that as the commands are passed to shell or cmd.exe, they
+        do their own round of substitution - plan adequately.
+    -->
+    <!-- The configure command is free to do any extra parsing and
+        checking of the parameters, and converting the parameters
+        into the real format expected by the execution command.
+        If the configure command fails (non-0 error code), it's 
+        reported as a reset() error 
+    -->
+    <Parameter id="x_unixCmdConfig" 
+      label="Unix Configure Command" 
+      type="string"
+      use="optional"
+    />
+    <Parameter id="x_winCmdConfig" 
+      label="Windows Configure Command" 
+      type="string"
+      use="optional"
+    />
+    <!-- The Adapter start() will sit and wait for this command to complete -->
+    <Parameter id="x_unixCmdExec" 
+      label="Unix Execute Command" 
+      type="string"
+      use="optional"
+    />
+    <Parameter id="x_winCmdExec" 
+      label="Windows Execute Command" 
+      type="string"
+      use="optional"
+    />
+    <!-- The stop command will run from a separate thread, it must make
+        the execution command to exit - by killing it, signalling it or otherwise.
+    -->
+    <Parameter id="x_unixCmdStop" 
+      label="Unix Stop Command" 
+      type="string"
+      use="optional"
+    />
+    <Parameter id="x_winCmdStop" 
+      label="Windows Stop Command" 
+      type="string"
+      use="optional"
+    />
+    <!-- The clean command will run after the execution command exits -
+        normally or after being killed by stop command.
+    -->
+    <Parameter id="x_unixCmdClean" 
+      label="Unix Clean Command" 
+      type="string"
+      use="optional"
+    />
+    <Parameter id="x_winCmdClean" 
+      label="Windows Clean Command" 
+      type="string"
+      use="optional"
+    />
+    <!-- 
+        For more reliability the Adapter may repeat the stop
+        command continuously until it detects that the running external
+        process has exited.
+    -->
+    <Parameter id="x_killRetryPeriod" 
+      label="Kill Retry Period (seconds)" 
+      descr="Period to repeat the stop command until the process exits" 
+      type="int"
+      use="optional"
+      default="0"
+    />
+    <!-- 
+	 these commands do discovery. They should write a discovery xml 
+	 file into the file named passed when the Adapter automatically  
+	 adds the  -o "<tempory disc filename>" argument to 
+	 this command before it is executed.
+    -->
+    <Parameter id="x_unixCmdDisc" 
+      label="Discovery Command" 
+      type="string"
+      use="optional"
+    />
+    <Parameter id="x_winCmdDisc" 
+      label="Discovery Command" 
+      type="string"
+      use="optional"
+    />
+
+    <!-- Add any extra parameters to be passed to the external programs -->
+    <Parameter id="example1" 
+      label="Example 1" 
+      descr="An example of parameter passed to the parameter file"
+      type="string"
+      use="advanced"
+    />
+    <Parameter id="example2" 
+      label="Example 2" 
+      descr="An example of parameter passed to the parameter file"
+      type="string"
+      use="advanced"
+    />
+    <Parameter id="propertyset" 
+      label="propertyset" 
+      descr="to look up properties in project configuration"
+      type="string"
+      use="advanced"
+      default=""/>  	
+  </Section>
+</Adapter>

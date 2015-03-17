@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Adapter type="input"
+  id="atomreader_in"
+  label="Atom Feed Input"
+  descr="Reads data from an Atom data feed"
+>
+
+  <Library file="atomreader_in" type="binary"/>
+
+  <Special>
+    <Internal id="format" 
+      label="Data Format" 
+      type="string"
+      default="xml"/>
+  </Special>
+
+  <Section>
+    <Parameter id="dateFormat" 
+      label="Date Format" 
+      descr="Format string for parsing date values"
+      type="string"
+      use="advanced"
+      default="%Y-%m-%dT%H:%M:%S"/>
+    <Parameter id="timestampFormat" 
+      label="Timestamp Format" 
+      descr="Format string for parsing timestamp values"
+      type="string"
+      use="advanced"
+      default="%Y-%m-%dT%H:%M:%S"/>
+		<Parameter id="URL" 
+      label="Source URL" 
+      descr="URL of the Atom Feed"
+      type="string"
+      use="required"/>
+    <Parameter id="refreshInterval" 
+      label="Refresh Interval" 
+      descr="Atom Feed polling interval - Milliseconds"
+      type="string"
+      use="advanced"
+      default="60000"/>
+    <Parameter id="propertyset" 
+      label="propertyset" 
+      descr="to look up properties in project configuration"
+      type="string"
+      use="advanced"
+      default=""/>  
+  </Section>
+</Adapter>

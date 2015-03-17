@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Adapter type="output"
+  id="db_out"
+  label="Generic DB Output"
+  descr="Writes data to a database"
+>
+  <Library file="db_out" type="binary"/>   
+  <Section>
+    <Parameter id="service"
+      label="Database Service Name"
+      descr="Name of database service entry with connection information"
+      type="string"
+      use="required"
+    />
+  </Section>
+  <Section>
+    <Parameter id="table" 
+      label="Output Table Name (Runtime)"
+      descr="The name of the table to push data to"
+      type="tables"
+      use="optional"
+    />
+    <Parameter id="dateFormat" 
+      label="Date Format" 
+      descr="Format string for parsing date values"
+      type="string"
+      use="advanced"
+      default="%Y-%m-%dT%H:%M:%S"
+    />
+    <Parameter id="timestampFormat" 
+      label="Timestamp Format" 
+      descr="Format string for parsing timestamp values"
+      type="string"
+      use="advanced"
+      default="%Y-%m-%dT%H:%M:%S"
+    />
+    <Parameter id="outputBase" 
+      label="Include Base Content" 
+      descr="Output initial stream contents in addition to stream updates"
+      type="boolean"
+      use="optional"
+      default="false"
+    />
+    <Parameter id="onlyBase" 
+      label="Only Base Content" 
+      descr="Send only the initial contents of the stream, once"
+      type="boolean"
+      use="advanced"
+      default="false"
+    />
+    <Parameter id="truncateTable" 
+      label="Truncate The Database Table"
+      descr="Start by truncating the database table, then populating with streaming data"
+      type="boolean"
+      use="optional"
+      default="false"
+    />
+    <Parameter id="batchLimit" 
+      label="Batch Limit"
+      descr="Number of records to process together as a batch"
+      type="uint"
+      use="advanced"
+      default="1"
+    />
+    <Parameter id="permutation" 
+      label="Field Mapping" 
+      descr="Mapping between the in-platform and external fields"
+      type="permutation"
+      use="advanced"
+    />
+	<Parameter id="propertyset" 
+      label="propertyset" 
+      descr="to look up properties in project configuration"
+      type="string"
+      use="advanced"
+      default=""/>	
+  </Section>
+</Adapter>

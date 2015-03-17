@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Adapter type="output" external="true"
+  id="toolkit_jms_xmllist_output"
+  label="JMS Event XML Output"
+  descr="Writes XML-formatted event data to JMS"
+>
+  <Library file="simple_ext" type="binary"/>
+  
+  <Special>
+    <Internal id="x_initialOnly" 
+      label="Does Initial Loading Only" 
+      descr="Do initial loading, or the continuous loading"
+      type="boolean"
+      default="false"
+    />
+    <Internal id="x_addParamFile" 
+      label="Add Parameter File" 
+      type="boolean"
+      default="false"
+    />
+    <Internal id="x_killRetryPeriod" 
+      label="Period to repeat the stop command until the process exits" 
+      type="int"
+      default="0"
+    />
+	<Internal id="x_allocateLocalSessionId" 
+      label="Request a new local session id"
+      descr="Request the project to allocate a new local session id. Then, the adapter could connect to the project using the new local session id depending on the adapter's choice"	  
+      type="boolean"
+      default="true"
+    />
+
+    <!-- 
+	Start the out-of-process Sybase ESP Adapter.
+    -->
+    <Internal id="x_unixCmdExec" 
+      label="Execute Command" 
+      type="string"
+	  default="&quot;$ESP_HOME/adapters/framework/bin/start.sh&quot; &quot;$ESP_HOME/adapters/framework/instances/jms_xmllist_output/adapter_config.xml&quot; &quot;-DJMSOutputTransporterParameters.ConnectionFactory=$connectionFactory&quot; &quot;-DJMSOutputTransporterParameters.JndiContextFactory=$jndiContextFactory&quot; &quot;-DJMSOutputTransporterParameters.JndiURL=$jndiURL&quot; &quot;-DJMSOutputTransporterParameters.DestinationType=$destinationType&quot; &quot;-DJMSOutputTransporterParameters.DestinationName=$destinationName&quot; &quot;-DJMSOutputTransporterParameters.BatchSize=$BatchSize&quot; &quot;-DJMSOutputTransporterParameters.BatchPeriod=$BatchPeriod&quot;  &quot;-DJMSOutputTransporterParameters.JndiSecurityPrincipal=$jndiSecurityPrincipal&quot; &quot;-DJMSOutputTransporterParameters.JndiSecurityCredentials=$jndiSecurityCredentials&quot; &quot;-DJMSOutputTransporterParameters.JndiSecurityCredentials[@encrypted]=$jndiCreEncrypted&quot; &quot;-DJMSOutputTransporterParameters.Username=$Username&quot; &quot;-DJMSOutputTransporterParameters.Password=$Password&quot; &quot;-DJMSOutputTransporterParameters.Password[@encrypted]=$encrypted&quot; &quot;-DJMSOutputTransporterParameters.DeliveryMode=$deliveryMode&quot; &quot;-DEspToXmlStringFormatterParameters.DateFormat=$xmllistDateFormat&quot; &quot;-DEspToXmlStringFormatterParameters.TimestampFormat=$xmllistTimestampFormat&quot; &quot;-DEspToXmlStringFormatterParameters.TimeFormat=$xmllistTimeFormat&quot; &quot;-DEspSubscriberParameters.EnableGdMode=$EnableGdMode&quot; &quot;-DEspSubscriberParameters.EnableGdCache=$EnableGdCache&quot; &quot;-DEspSubscriberParameters.GdSubscriberName=$GdSubscriberName&quot;"
+    />
+    
+    <Internal id="x_winCmdExec" 
+      label="Execute Command" 
+      type="string"
+	  default="&quot;$ESP_HOME/adapters/framework/bin/start.bat&quot; &quot;$ESP_HOME/adapters/framework/instances/jms_xmllist_output/adapter_config.xml&quot; &quot;-DJMSOutputTransporterParameters.ConnectionFactory=$connectionFactory&quot; &quot;-DJMSOutputTransporterParameters.JndiContextFactory=$jndiContextFactory&quot; &quot;-DJMSOutputTransporterParameters.JndiURL=$jndiURL&quot; &quot;-DJMSOutputTransporterParameters.DestinationType=$destinationType&quot; &quot;-DJMSOutputTransporterParameters.DestinationName=$destinationName&quot; &quot;-DJMSOutputTransporterParameters.BatchSize=$BatchSize&quot; &quot;-DJMSOutputTransporterParameters.BatchPeriod=$BatchPeriod&quot; &quot;-DJMSOutputTransporterParameters.JndiSecurityPrincipal=$jndiSecurityPrincipal&quot; &quot;-DJMSOutputTransporterParameters.JndiSecurityCredentials=$jndiSecurityCredentials&quot; &quot;-DJMSOutputTransporterParameters.JndiSecurityCredentials[@encrypted]=$jndiCreEncrypted&quot; &quot;-DJMSOutputTransporterParameters.Username=$Username&quot; &quot;-DJMSOutputTransporterParameters.Password=$Password&quot; &quot;-DJMSOutputTransporterParameters.Password[@encrypted]=$encrypted&quot; &quot;-DJMSOutputTransporterParameters.DeliveryMode=$deliveryMode&quot; &quot;-DEspToXmlStringFormatterParameters.DateFormat=$xmllistDateFormat&quot; &quot;-DEspToXmlStringFormatterParameters.TimestampFormat=$xmllistTimestampFormat&quot; &quot;-DEspToXmlStringFormatterParameters.TimeFormat=$xmllistTimeFormat&quot; &quot;-DEspSubscriberParameters.EnableGdMode=$EnableGdMode&quot; &quot;-DEspSubscriberParameters.EnableGdCache=$EnableGdCache&quot; &quot;-DEspSubscriberParameters.GdSubscriberName=$GdSubscriberName&quot;"
+    />
+
+    <Internal id="x_unixCmdStop" 
+      label="Stop Command" 
+      type="string"
+	  default="&quot;$ESP_HOME/adapters/framework/bin/stop.sh&quot; &quot;$ESP_HOME/adapters/framework/instances/jms_xmllist_output/adapter_config.xml&quot;"
+    />
+    <Internal id="x_winCmdStop" 
+      label="Stop Command" 
+      type="string"
+	  default="&quot;$ESP_HOME/adapters/framework/bin/stop.bat&quot; &quot;$ESP_HOME/adapters/framework/instances/jms_xmllist_output/adapter_config.xml&quot;"
+    />
+
+  </Special>
+  
+  <Section>
+    <!-- These parameters show up in the Sybase ESP Studio properties dialog -->
+    <Parameter id="xmllistDateFormat"
+	       label="Date Format"
+	       descr="Format string for parsing date values"
+	       type="string"
+	       use="advanced"
+	       />
+	<Parameter id="xmllistTimestampFormat"
+	       label="Timestamp Format"
+	       descr="Format string for parsing timestamp values"
+	       type="string"
+	       use="advanced"
+	       />
+	<Parameter id="xmllistTimeFormat"
+	       label="Time Format"
+	       descr="Format string for parsing time values"
+	       type="string"
+	       use="advanced"
+	       />	       
+	<Parameter id="connectionFactory"
+	       label="Connection Factory"
+      descr="Connection factory name. E.g, ConnectionFactory"
+	       type="string"
+         use="required"
+         default="ConnectionFactory"
+	       />
+	<Parameter id="jndiContextFactory"
+	       label="JNDI Context Factory"
+      descr="Context Factory for JNDI context initialization. E.g, org.apache.activemq.jndi.ActiveMQInitialContextFactory"
+	       type="string"
+         use="required"
+         default="org.apache.activemq.jndi.ActiveMQInitialContextFactory"
+	       />
+	<Parameter id="jndiURL"
+	       label="JNDI URL"
+      descr="JNDI URL e.g., tcp://localhost:61616"
+	       type="string"
+         use="required"
+         default="tcp://localhost:61616"
+	       />
+	<Parameter id="destinationType"
+	       label="JMS Destination Type"
+	       descr="Specify the destination type. Valid values are: QUEUE and TOPIC"
+	       type="string"
+         use="required"
+         default="QUEUE"
+	       />
+  <Parameter id="destinationName"
+	       label="Destination Name"
+	       descr="Specify the destination name"
+	       type="string"
+	       use="required"
+	       default="xmlout.queue" 
+	       />
+	<Parameter id="deliveryMode"
+	       label="Delivery Mode"
+	       descr="Specify the delivery mode. Valid values: PERSISTENT, NON_PERSISTENT"
+	       type="string"
+	       use="optional"
+	       />
+    <Parameter id="BatchSize"
+               label="Batch Size"
+               descr="Specify every how many rows shall adapter perform a commit"
+               type="int"
+               use="advanced"
+               default="1"
+    />			   
+    <Parameter id="BatchPeriod"
+               label="Batch Period"
+               descr="Specify every how many seconds shall adapter perform a commit"
+               type="int"
+               use="advanced"
+               default="0"
+    />
+    <Parameter id="jndiSecurityPrincipal"
+               label="JNDI Security Principal"
+               descr="Specify the JNDI security principal used for the JMS server"
+               type="string"
+               use="advanced"
+    />
+    <Parameter id="jndiSecurityCredentials"
+               label="JNDI Security Credentials"
+               descr="Specify the JNDI security credentials used for the JMS server"
+               type="string"
+               use="advanced"
+    />		   
+    <Parameter id="jndiCreEncrypted"
+               label="JNDI Security Credentials Encrypted"
+               descr="Specify whether the JNDI Security Credentials value is encrypted."
+               type="boolean"
+               use="advanced"
+    />
+    <Parameter id="Username"
+               label="User Name"
+               descr="Specify the user name used to connect with JMS server"
+               type="string"
+               use="advanced"
+    />
+    <Parameter id="Password"
+               label="Password"
+               descr="Specify the password used to connect with JMS server"
+               type="string"
+               use="advanced"
+    />
+    <Parameter id="encrypted"
+               label="Password Encrypted"
+               descr="Specify whether the password value is encrypted."
+               type="boolean"
+               use="advanced"
+    />
+	<Parameter id="propertyset" 
+	      label="propertyset" 
+	      descr="to look up properties in project configuration"
+	      type="string"
+	      use="advanced"
+      	  default=""
+      	 />
+	<Parameter id="EnableGdMode"
+         label="Enable Gd mode"
+	       descr="Specifies whether the adapter runs in guaranteed delivery (GD) mode."
+	       type="boolean"
+	       use="advanced"
+	       />
+	<Parameter id="EnableGdCache"
+         label="Enable Gd Cache"
+	       descr="If set to true, only rows that can be recovered by the ESP Server on restart are sent to the end source. Other rows are cached internally by the adapter."
+	       type="boolean"
+	       use="advanced"
+	       />
+	<Parameter id="GdSubscriberName"
+         label="Gd Subscriber Name"
+	       descr="Specify a unique name to identify the GD subscription client."
+	       type="string"
+	       use="advanced"
+	       />
+  </Section>
+</Adapter>

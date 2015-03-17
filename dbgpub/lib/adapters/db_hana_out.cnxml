@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Adapter type="output"
+  id="hana_out"
+  label="HANA Output"
+  descr="Reads data from ESP and writes it to HANA."
+>
+<Library file="db_hana_out" type="binary"/>
+  <Special>
+    <Internal id="freeRowData"
+      label="Free row data"
+      type="boolean"
+      default="false"
+    />
+  </Special>
+  <Section>
+    <Parameter id="service"
+      label="Database Service Name"
+      descr="Name of service entry with connection information to an HANA database. Only ODBC connections are supported."
+      type="string"
+      use="required"
+    />
+	<Parameter id="sourceSchema" 
+      label="Target Database Schema Name" 
+      descr="The name of the database schema of the target table. This property is required when not in discovery mode."
+      type="string"
+      use="optional"
+      default=""
+	/> 
+    <Parameter id="table" 
+      label="Target Database Table Name"
+      descr="The name of the database table to push data to. This property is required when not in discovery mode."
+      type="tables"
+      use="optional"
+    />
+    <Parameter id="permutation" 
+      label="Field Mapping" 
+      descr="Mapping between the ESP and database fields."
+      type="permutation"
+      use="advanced"
+    />    
+    <Parameter id="bulkBatchSize" 
+      label="Bulk Batch Size" 
+      descr="Number of rows that can be inserted in a database table partition before a commit occurs."
+      type="int"
+      use="advanced"
+      default="10000"
+    />
+    <Parameter id="bulkInsertArraySize" 
+      label="Bulk Insert Array Size" 
+      descr="Number of rows simultaneously inserted into a database table partition. This option must be a divisor of the batch size."
+      type="int"
+      use="advanced"
+      default="1000"
+    />
+    <Parameter id="idleBufferWriteDelayMSec" 
+      label="Idle Buffer Write Delay In MSec" 
+      descr="Number of milliseconds that a database table partition may sit idle with uncommitted data available for insert."
+      type="int"
+      use="advanced"
+      default="1000"
+    />
+    <Parameter id="bufferAgeLimitMSec" 
+      label="Buffer Age Limit In MSec" 
+      descr="Forces the loading of any data that has been in existence longer than the time limit. The value in milliseconds must be between 1 and 65535."
+      type="int"
+      use="advanced"
+      default="10000"
+    />
+	<Parameter id="dataWarehouseMode" 
+      label="Data Warehouse Mode" 
+      descr="The type of data warehousing mode to be used by the adapter."
+      type="choice"
+      use="advanced"
+      default="OFF">
+      <ValueList>
+          <Value value="INSERTONLY" label="Insert Only"/>
+          <Value value="ON" label="On" />
+          <Value value="OFF" label="Off" />
+          <Value value="ARCHIVE" label="Archive" />
+       </ValueList>
+   </Parameter>
+	<Parameter id="timestampColumnName" 
+      label="Timestamp Column Name" 
+      descr="If specified then insert into HANA column with given name the timestamp indicating when given row was added to the bulk array."
+      type="string"
+      use="advanced"
+      default=""
+    />
+	<Parameter id="opcodeColumnName" 
+      label="Operation Code Column Name" 
+      descr="Name of the database column used by the HANA output adapter to store operation code."
+      type="string"
+      use="advanced"
+      default=""
+    />
+    <Parameter id="onlyBase" 
+      label="Only Base Content" 
+      descr="Send only the initial contents of the stream, once."
+      type="boolean"
+      use="advanced"
+      default="false"
+    />             
+    <Parameter id="outputBase" 
+      label="Include Base Content" 
+      descr="Output initial stream contents in addition to stream updates."
+      type="boolean"
+      use="optional"
+      default="false"
+    />
+    <Parameter id="propertyset" 
+      label="propertyset" 
+      descr="To look up properties in project configuration."
+      type="string"
+      use="advanced"
+      default=""
+    />
+	<Parameter id="timezoneForStats" 
+      label="Timezone For Statistics" 
+      descr="This is the timezone the adapter will use for the since midnight statistics."
+      type="string"
+      use="advanced"
+      default="GMT"/>
+	<Parameter id="threadCount" 
+      label="Number of Threads" 
+      descr="This is the number of threads processing incoming data to be loaded or deleted into or from the database."
+      type="int"
+      use="advanced"
+      default="1"/>
+	<Parameter id="reconnectAttemptDelayMSec" 
+      label="Delay between Reconnection Attempts" 
+      descr="Number of milliseconds between attempts to reconnect"
+      type="int"
+      use="advanced"
+      default="1000"/>
+	<Parameter id="maxReconnectAttempts" 
+      label="Maximum Number of Reconnection Attempts" 
+      descr="Number of attempts at reconnecting before giving up. -1 for infinite."
+      type="int"
+      use="advanced"
+      default="1"/>
+    <Parameter id="maxQueueSize" 
+      label="Maximum Queue Size" 
+      descr="This is maximum queue size for incoming rows of data. 0 means use default which is 2 * threadCount * bulkInsertArraySize."
+      type="int"
+      use="advanced"
+      default="0"/>
+	<Parameter id="enableGDMode"
+      label="Runs Adapter in GD Mode" 
+      descr="Runs Adapter in GD Mode"
+      type="boolean"
+      use="advanced"
+      default="false"
+	/>
+    <Parameter id="enableGDCache" 
+      label="enable the adapter internal cache mode"
+      descr="When set to true, only rows have been checkpointed will be sent to adapter, others will be cached internally. This setting will be ignored if the attached stream is not running on GD with CP mode."
+      type="boolean"
+      use="advanced"
+      default="true"
+    />
+    <Parameter id="gdBatchSize" 
+      label="GD Batch Size"
+      descr="The number indicates every how many blocks will an commit command be sent to adapter and a GDCommit be sent to stream."
+      type="int"
+      use="advanced"
+      default="10"
+    />
+  </Section>
+</Adapter>

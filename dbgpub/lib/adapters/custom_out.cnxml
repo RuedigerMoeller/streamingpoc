@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Adapter type="output"
+  id="custom_out"
+  label="Custom Output"
+  descr="Dummy Custom Output Adapter"
+>
+<Library file="custom_out" type="binary"/>
+ <Section>
+ </Section>
+</Adapter>

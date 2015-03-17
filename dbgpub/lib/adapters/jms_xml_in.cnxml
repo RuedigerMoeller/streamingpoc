@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Adapter type="input"
+  id="jms_xml_in"
+  label="JMS XML Input (deprecated)"
+  descr="Reads XML data from JMS"
+>
+  <Library file="jms_in" type="binary"/>
+  <Special>
+    <Internal id="dataFormat" 
+      label="DataFormat" 
+      type="string"
+      default="XML"
+    />
+    <Internal id="isDeprecated" 
+      label="isDeprecated" 
+      type="boolean"
+      default="true"
+    />
+  </Special>
+  <Section>
+    <Parameter id="connectionFactory" 
+      label="Connection Factory"
+      descr="Connection factory name. E.g, ConnectionFactory"
+      type="string"
+      use="required"
+      default="ConnectionFactory"
+    />
+    <Parameter id="jndiContextFactory" 
+      label="JNDI Context Factory" 
+      descr="Context Factory for JNDI context initialization. E.g, org.apache.activemq.jndi.ActiveMQInitialContextFactory"
+      type="string"
+      use="required"
+      default="org.apache.activemq.jndi.ActiveMQInitialContextFactory"
+    />
+    <Parameter id="jndiURL" 
+      label="JNDI URL" 
+      descr="JNDI URL e.g., tcp://localhost:61616"
+      type="string"
+      use="required"
+      default="tcp://localhost:61616"
+    />
+    <Parameter id="destinationType" 
+      label="Destination Type" 
+      descr="Destination type"
+      type="choice"
+      use="required"
+      default="QUEUE">
+      <ValueList>
+        <Value value="QUEUE" label="Queue"/>
+        <Value value="TOPIC" label="Topic"/>
+      </ValueList>
+    </Parameter>
+    <Parameter id="destinationName" 
+      label="Destination Name" 
+      descr="Destination name"
+      type="string"
+      use="required"
+      default="xmlin.queue"
+    />
+    <Parameter id="subscriptionMode" 
+      label="Subscription Mode" 
+      descr="Subscription Mode"
+      type="choice"
+      use="optional"
+      default="NONDURABLE">
+      <ValueList>
+        <Value value="DURABLE" label="Durable"/>
+        <Value value="NONDURABLE" label="Non Durable"/>
+      </ValueList>
+    </Parameter>
+    <Parameter id="clientID" 
+      label="Client ID" 
+      descr="Client ID"
+      type="string"
+      use="optional"
+    />
+    <Parameter id="subscriptionName" 
+      label="Subscription Name" 
+      descr="Subscription name"
+      type="string"
+      use="optional"
+    />
+    <Parameter id="batchsize" 
+      label="Batch Size" 
+      descr="Number of records in batch to commit in Durable Subscription Mode"
+      type="uint"
+      use="optional"
+      default="1"      
+    />
+    <Parameter id="matchStreamName" 
+      label="Match Stream Name" 
+      descr="Ignore message if the XML element name does not match the source stream name"
+      type="boolean"
+      use="advanced"
+      default="false"
+    />
+    <Parameter id="timeFormat"
+      label="Time Format"
+      descr="Time format"
+      type="string"
+      use="advanced"
+      default="%H:%M:%S"
+    />
+    <Parameter id="dateFormat" 
+      label="Date Format" 
+      descr="Date format"
+      type="string"
+      use="advanced"
+      default="%Y-%m-%dT%H:%M:%S"
+    />
+    <Parameter id="timestampFormat" 
+      label="Timestamp Format" 
+      descr="Timestamp format"
+      type="string"
+      use="advanced"
+      default="%Y-%m-%dT%H:%M:%S"
+    />
+    <Parameter id="propertyset" 
+      label="propertyset" 
+      descr="to look up properties in project configuration"
+      type="string"
+      use="advanced"
+      default=""/>  
+  </Section>
+</Adapter>

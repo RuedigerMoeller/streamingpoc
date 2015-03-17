@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Adapter type="input" external="true"
+  id="soapinput"
+  label="Web Services (SOAP) Input (external)"
+  descr="Reads data from SOAP Web Service"
+>
+  <Library file="simple_ext" type="binary"/>
+  
+  <Special>
+    <Internal id="x_initialOnly" 
+      label="Does Initial Loading Only" 
+      descr="Do initial loading, or the continuous loading"
+      type="boolean"
+      default="false"
+    />
+    <Internal id="x_addParamFile" 
+      label="Add Parameter File" 
+      type="boolean"
+      default="false"
+    />
+    <Internal id="x_killRetryPeriod" 
+      label="Period to repeat the stop command until the process exits" 
+      type="int"
+      default="0"
+    />
+	<Internal id="x_allocateLocalSessionId" 
+      label="Request a new local session id"
+      descr="Request the project to allocate a new local session id. Then, the adapter could connect to the project using the new local session id depending on the adapter's choice"	  
+      type="boolean"
+      default="true"
+    />
+
+    <!-- 
+	Start the out-of-process Sybase ESP Adapter for SOAP Web Services.
+    -->
+    <Internal id="x_unixCmdExec" 
+      label="Execute Command" 
+      type="string"
+      default="&quot;$ESP_HOME/adapters/webservices/bin/adapter.sh&quot; &quot;$configFilePath&quot; &quot;$jdkHome&quot; start"
+    />
+    
+    <Internal id="x_winCmdExec" 
+      label="Execute Command" 
+      type="string"
+      default="&quot;$ESP_HOME/adapters/webservices/bin/adapter.bat&quot; &quot;$configFilePath&quot; &quot;$jdkHome&quot;  start "
+    />
+
+    <Internal id="x_unixCmdStop" 
+      label="Stop Command" 
+      type="string"
+      default="&quot;$ESP_HOME/adapters/webservices/bin/adapter.sh&quot; &quot;$configFilePath&quot; &quot;$jdkHome&quot; stop"
+    />
+    <Internal id="x_winCmdStop" 
+      label="Stop Command" 
+      type="string"
+      default="&quot;$ESP_HOME/adapters/webservices/bin/adapter.bat&quot; &quot;$configFilePath&quot; &quot;$jdkHome&quot; stop &quot;"
+    />
+
+    <!--
+	Data discovery. 
+	The command below will have '-o "<temp file>"' added to it. It 
+	will write the discovered data in this file.
+     -->
+    <Internal id="x_unixCmdDisc" 
+      label="Discovery Command" 
+      type="string"
+      default="&quot;$jdkHome/bin/java&quot; -cp &quot;$ESP_HOME/adapters/webservices/config:$ESP_HOME/adapters/webservices/libj/esp_adapter_soap_cp.jar&quot; &quot;-Dhttp.proxyHost=$proxyHost&quot; &quot;-Dhttp.proxyPort=$proxyPort&quot; &quot;-Dhttp.nonProxyHosts=$nonProxyHosts&quot; &quot;-Duser.dir=$discoveryWorkingDir&quot; &quot;-Djavax.net.ssl.trustStore=$trustStore&quot; &quot;-Djavax.net.ssl.trustStorePassword=$trustStorePassword&quot; com.sap.esp.adapter.ws.soap.Discoverer -t input -w &quot;$discoveryWsdl&quot; -s &quot;$discoveryServiceName&quot;" 
+    />
+    <Internal id="x_winCmdDisc" 
+      label="Discovery Command" 
+      type="string"
+      default="&quot;$jdkHome\\bin\\java&quot; -cp &quot;$ESP_HOME\\adapters\\webservices\\config;$ESP_HOME\\adapters\\webservices\\libj\\esp_adapter_soap_cp.jar&quot; &quot;-Dhttp.proxyHost=$proxyHost&quot; &quot;-Dhttp.proxyPort=$proxyPort&quot; &quot;-Dhttp.nonProxyHosts=$nonProxyHosts&quot; &quot;-Duser.dir=$discoveryWorkingDir&quot; &quot;-Djavax.net.ssl.trustStore=$trustStore&quot; &quot;-Djavax.net.ssl.trustStorePassword=$trustStorePassword&quot; com.sap.esp.adapter.ws.soap.Discoverer -t input -w &quot;$discoveryWsdl&quot; -s &quot;$discoveryServiceName&quot;" 
+    />
+  </Special>
+  
+  <Section>
+    <!-- These parameters show up in the Sybase ESP Studio properties dialog -->
+
+    <Parameter id="configFilePath"
+	       label="Adapter Configuration File"
+	       descr="Path to the Adapter configuration xml file"
+	       type="filename"
+	       use="required"
+	/>
+		
+    <Parameter id="mapFilePath"
+	       label="Adapter Mapping File"
+	       descr="Path and name of Adapter mapping xml file"
+	       type="filename"
+	       use="optional"
+	  />
+	  
+	<Parameter id="jdkHome"
+	       label="JDK location"
+	       descr="Path to the JDK the adapter will use"
+	       type="directory"
+	       use="required"		
+	/>
+
+    <Parameter id="discoveryWsdl"
+	       label="Discovery WSDL URL"
+	       descr="URL to the Web Service WSDL to discover (required for discovery)"
+	       type="string"
+	       use="optional"
+    />
+
+    <Parameter id="discoveryWorkingDir"
+	       label="Discovery Working Directory"
+	       descr="Path to which temporary files will be written during discovery (required for discovery)"
+	       type="directory"
+	       use="optional"
+    />
+
+    <Parameter id="discoveryServiceName"
+	       label="Discovery Service name"
+	       descr="Name of the Web Service to discover (required for discovery)"
+	       type="string"
+	       use="optional"
+    />
+
+    <!-- these parameters show up on the Advanced Tab in the Studio -->
+    <Parameter id="proxyHost"
+	       label="Host name of proxy server to use"
+	       descr="Host name of proxy server to use for discovery"
+	       type="string"
+	       use="advanced"
+    />	
+
+    <Parameter id="proxyPort"
+	       label="Port of proxy server to use"
+	       descr="Port of proxy server to use for discovery"
+	       type="int"
+	       use="advanced"
+    />	
+
+    <Parameter id="nonProxyHosts"
+	       label="Non-proxy hosts"
+	       descr="Names of hosts that do not use the proxy, separated by |"
+	       type="string"
+	       use="advanced"
+    />	
+
+    <Parameter id="trustStore"
+	       label="SSL TrustStore"
+	       descr="Location of SSL trustStore to use for discovery"
+	       type="filename"
+	       use="advanced"
+    />	
+    <Parameter id="trustStorePassword"
+	       label="SSL TrustStore Password"
+	       descr="Password for SSL TrustStore"
+	       type="string"
+	       use="advanced"
+    />	
+  </Section>
+</Adapter>

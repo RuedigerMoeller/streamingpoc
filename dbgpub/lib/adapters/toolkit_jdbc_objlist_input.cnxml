@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Adapter type="input" external="true"
+  id="toolkit_jdbc_objlist_input"
+  label="JDBC Input"
+  descr="Reads data from a database"
+>
+  <Library file="simple_ext" type="binary"/>
+  
+  <Special>
+    <Internal id="x_initialOnly" 
+      label="Does Initial Loading Only" 
+      descr="Do initial loading, or the continuous loading"
+      type="boolean"
+      default="false"
+    />
+    <Internal id="x_addParamFile" 
+      label="Add Parameter File" 
+      type="boolean"
+      default="false"
+    />
+    <Internal id="x_killRetryPeriod" 
+      label="Period to repeat the stop command until the process exits" 
+      type="int"
+      default="0"
+    />
+	<Internal id="x_allocateLocalSessionId" 
+      label="Request a new local session id"
+      descr="Request the project to allocate a new local session id. Then, the adapter could connect to the project using the new local session id depending on the adapter's choice"	  
+      type="boolean"
+      default="true"
+    />
+
+    <!-- 
+	Start the out-of-process Sybase ESP Adapter.
+    -->
+    <Internal id="x_unixCmdExec" 
+      label="Execute Command" 
+      type="string"
+	  default="&quot;$ESP_HOME/adapters/framework/bin/start.sh&quot; &quot;$ESP_HOME/adapters/framework/instances/jdbc_objlist_input/adapter_config.xml&quot; &quot;-DJdbcInputTransporterParameters.DbType=$dbType&quot; &quot;-DJdbcInputTransporterParameters.Host=$host&quot; &quot;-DJdbcInputTransporterParameters.Port=$port&quot; &quot;-DJdbcInputTransporterParameters.DbName=$dbName&quot; &quot;-DJdbcInputTransporterParameters.Username=$username&quot; &quot;-DJdbcInputTransporterParameters.Password=$password&quot; &quot;-DJdbcInputTransporterParameters.Password[@encrypted]=$encrypted&quot; &quot;-DJdbcInputTransporterParameters.RSAKeyStore=$rsaKeyStore&quot; &quot;-DJdbcInputTransporterParameters.RSAKeyStorePassword=$rsaKeyStorePassword&quot; &quot;-DJdbcInputTransporterParameters.RSAKeyStoreAlias=$rsaKeyStoreAlias&quot; &quot;-DJdbcInputTransporterParameters.Query=$query&quot; &quot;-DJdbcInputTransporterParameters.Table=$table&quot; &quot;-DJdbcInputTransporterParameters.DbDriver=$dbDriver&quot; &quot;-DObjectListToEspFormatterParameters.DateFormat=$objectlistDateFormat&quot; &quot;-DObjectListToEspFormatterParameters.TimestampFormat=$objectlistTimestampFormat&quot; &quot;-DObjectListToEspFormatterParameters.TimeFormat=$objectlistTimeFormat&quot;"
+    />
+    
+    <Internal id="x_winCmdExec" 
+      label="Execute Command" 
+      type="string"
+	  default="&quot;$ESP_HOME/adapters/framework/bin/start.bat&quot; &quot;$ESP_HOME/adapters/framework/instances/jdbc_objlist_input/adapter_config.xml&quot; &quot;-DJdbcInputTransporterParameters.DbType=$dbType&quot; &quot;-DJdbcInputTransporterParameters.Host=$host&quot; &quot;-DJdbcInputTransporterParameters.Port=$port&quot; &quot;-DJdbcInputTransporterParameters.DbName=$dbName&quot; &quot;-DJdbcInputTransporterParameters.Username=$username&quot; &quot;-DJdbcInputTransporterParameters.Password=$password&quot; &quot;-DJdbcInputTransporterParameters.Password[@encrypted]=$encrypted&quot; &quot;-DJdbcInputTransporterParameters.RSAKeyStore=$rsaKeyStore&quot; &quot;-DJdbcInputTransporterParameters.RSAKeyStorePassword=$rsaKeyStorePassword&quot; &quot;-DJdbcInputTransporterParameters.RSAKeyStoreAlias=$rsaKeyStoreAlias&quot; &quot;-DJdbcInputTransporterParameters.Query=$query&quot; &quot;-DJdbcInputTransporterParameters.Table=$table&quot; &quot;-DJdbcInputTransporterParameters.DbDriver=$dbDriver&quot; &quot;-DObjectListToEspFormatterParameters.DateFormat=$objectlistDateFormat&quot; &quot;-DObjectListToEspFormatterParameters.TimestampFormat=$objectlistTimestampFormat&quot; &quot;-DObjectListToEspFormatterParameters.TimeFormat=$objectlistTimeFormat&quot;"
+    />
+
+    <Internal id="x_unixCmdStop" 
+      label="Stop Command" 
+      type="string"
+	  default="&quot;$ESP_HOME/adapters/framework/bin/stop.sh&quot; &quot;$ESP_HOME/adapters/framework/instances/jdbc_objlist_input/adapter_config.xml&quot;"
+    />
+    <Internal id="x_winCmdStop" 
+      label="Stop Command" 
+      type="string"
+	  default="&quot;$ESP_HOME/adapters/framework/bin/stop.bat&quot; &quot;$ESP_HOME/adapters/framework/instances/jdbc_objlist_input/adapter_config.xml&quot;"
+    />
+
+    <!--
+	Data discovery. 
+	The command below will have '-o "<temp file>"' added to it. It 
+	will write the discovered data in this file.
+     -->
+    <Internal id="x_unixCmdDisc" 
+      label="Discovery Command" 
+      type="string"
+	  default="&quot;$ESP_HOME/adapters/framework/bin/discover.sh&quot; &quot;$ESP_HOME/adapters/framework/instances/jdbc_objlist_input/adapter_config.xml&quot; &quot;-DJdbcInputTransporterParameters.DbType=$dbType&quot; &quot;-DJdbcInputTransporterParameters.Host=$host&quot; &quot;-DJdbcInputTransporterParameters.Port=$port&quot; &quot;-DJdbcInputTransporterParameters.DbName=$dbName&quot; &quot;-DJdbcInputTransporterParameters.Username=$username&quot; &quot;-DJdbcInputTransporterParameters.Password=$password&quot; &quot;-DJdbcInputTransporterParameters.Password[@encrypted]=$encrypted&quot; &quot;-DJdbcInputTransporterParameters.RSAKeyStore=$rsaKeyStore&quot; &quot;-DJdbcInputTransporterParameters.RSAKeyStorePassword=$rsaKeyStorePassword&quot; &quot;-DJdbcInputTransporterParameters.RSAKeyStoreAlias=$rsaKeyStoreAlias&quot; &quot;-DJdbcInputTransporterParameters.Query=$query&quot; &quot;-DJdbcInputTransporterParameters.Table=$table&quot; &quot;-DJdbcInputTransporterParameters.DbDriver=$dbDriver&quot; &quot;-DObjectListToEspFormatterParameters.DateFormat=$objectlistDateFormat&quot; &quot;-DObjectListToEspFormatterParameters.TimestampFormat=$objectlistTimestampFormat&quot; &quot;-DObjectListToEspFormatterParameters.TimeFormat=$objectlistTimeFormat&quot;" 
+    />
+    <Internal id="x_winCmdDisc" 
+      label="Discovery Command" 
+      type="string"
+	  default="&quot;$ESP_HOME/adapters/framework/bin/discover.bat&quot; &quot;$ESP_HOME/adapters/framework/instances/jdbc_objlist_input/adapter_config.xml&quot; &quot;-DJdbcInputTransporterParameters.DbType=$dbType&quot; &quot;-DJdbcInputTransporterParameters.Host=$host&quot; &quot;-DJdbcInputTransporterParameters.Port=$port&quot; &quot;-DJdbcInputTransporterParameters.DbName=$dbName&quot; &quot;-DJdbcInputTransporterParameters.Username=$username&quot; &quot;-DJdbcInputTransporterParameters.Password=$password&quot; &quot;-DJdbcInputTransporterParameters.Password[@encrypted]=$encrypted&quot; &quot;-DJdbcInputTransporterParameters.RSAKeyStore=$rsaKeyStore&quot; &quot;-DJdbcInputTransporterParameters.RSAKeyStorePassword=$rsaKeyStorePassword&quot; &quot;-DJdbcInputTransporterParameters.RSAKeyStoreAlias=$rsaKeyStoreAlias&quot; &quot;-DJdbcInputTransporterParameters.Query=$query&quot; &quot;-DJdbcInputTransporterParameters.Table=$table&quot; &quot;-DJdbcInputTransporterParameters.DbDriver=$dbDriver&quot; &quot;-DObjectListToEspFormatterParameters.DateFormat=$objectlistDateFormat&quot; &quot;-DObjectListToEspFormatterParameters.TimestampFormat=$objectlistTimestampFormat&quot; &quot;-DObjectListToEspFormatterParameters.TimeFormat=$objectlistTimeFormat&quot;" 
+    />
+  </Special>
+  
+  <Section>
+    <!-- These parameters show up in the Sybase ESP Studio properties dialog -->
+    <Parameter id="objectlistDateFormat"
+	       label="Date Format"
+	       descr="Format string for parsing date values"
+	       type="string"
+	       use="advanced"
+	       />
+	<Parameter id="objectlistTimestampFormat"
+	       label="Timestamp Format"
+	       descr="Format string for parsing timestamp values"
+	       type="string"
+	       use="advanced"
+	       />
+	<Parameter id="objectlistTimeFormat"
+	       label="Time Format"
+	       descr="Format string for parsing time values"
+	       type="string"
+	       use="advanced"
+	       />	       
+	<Parameter id="dbType"
+	       label="DB Type"
+	       descr="Specify the database type to which you want to connect. Valid values: ORACLE:THIN,ORACLE:OCI8,SQLSERVER,ASE,DB2:APP,DB2:NET,DB2:UN2,HANA,KDB"
+	       type="string"
+	       use="required"
+	       />
+	<Parameter id="host"
+	       label="DB Host"
+	       descr="Specify the host name of the database to which you are connecting the adapter."
+	       type="string"
+	       use="optional"
+	       />
+	<Parameter id="port"
+	       label="DB Port"
+	       descr="Specify the port number for connecting to the database server"
+	       type="uint"
+	       use="optional"
+	       />
+	<Parameter id="dbName"
+	       label="DB Name"
+	       descr="Specify the database name to which you want to connect."
+	       type="string"
+	       use="optional"
+	       />	   
+	<Parameter id="username"
+	       label="Username"
+	       descr="Specify the database username"
+	       type="string"
+	       use="optional"
+	       />
+	<Parameter id="password"
+	       label="Password"
+	       descr="Specify the database password"
+	       type="string"
+	       use="optional"
+	       />
+	<Parameter id="query"
+	       label="SQL Query"
+	       descr="Specify the SQL query you want the adapter to execute. Set either the DB Table or SQL Query parameter. If you define both parameters, the adapter only uses the SQL Query parameter."
+	       type="string"
+	       use="advanced"
+	       />
+	<Parameter id="table"
+	       label="Table Name"
+	       descr="Specify the name of the table in the target database from which you want the adapter to read."
+	       type="string"
+	       use="optional"
+	       />	
+	<Parameter id="dbDriver"
+	       label="Driver Class"
+	       descr="Specify the JDBC driver class to use"
+	       type="string"
+	       use="advanced"
+	       />
+	<Parameter id="encrypted"
+	       label="DB Password Encrypted"
+	       descr="Specify whether the password value is encrypted. If set to true, the password value is decrypted using the RSA Key Store, RSA Key Store Password, and RSA Key Store Alias parameters."
+	       type="boolean"
+	       use="advanced"
+	       />
+	<Parameter id="rsaKeyStore"
+	       label="RSA Key Store"
+	       descr="File path for RSA key store"
+	       type="filename"
+	       use="advanced"
+	       />
+	<Parameter id="rsaKeyStorePassword"
+	       label="RSA Key Store Password"
+	       descr="RSA key store Password"
+	       type="string"
+	       use="advanced"
+	       />
+	<Parameter id="rsaKeyStoreAlias"
+	       label="Alias in RSA Key Store"
+	       descr="An alias stored in the RSA Key Store"
+	       type="string"
+	       use="advanced"
+	       />
+	<Parameter id="propertyset" 
+	      label="propertyset" 
+	      descr="to look up properties in project configuration"
+	      type="string"
+	      use="advanced"
+      	  default=""
+      	 />
+  </Section>
+</Adapter>

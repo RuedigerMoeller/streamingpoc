@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Adapter type="input"
+  id="db_in"
+  label="Generic DB Input"
+  descr="Reads data from a database"
+>
+  <Library file="db_in" type="binary"/>   
+  <Special>
+    <Internal id="x_requiresConnForCapabilities" 
+      label="true if this adapter requires a connection to determine its capabilities" 
+      descr="Do initial loading, or the continuous loading"
+      type="boolean"
+      default="true"
+    />
+  </Special>
+  <Section>
+    <Parameter id="service"
+      label="Database Service Name"
+      descr="Name of database service where adapter would obtain database connection from"
+      type="string"
+      use="required"
+    />
+    <Parameter id="query"
+      label="Database Query"
+      descr="The SQL query to be executed by the adapter"
+      type="string"
+      use="optional"
+    />
+    </Section>
+    <Section>
+    <Parameter id="table" 
+      label="Input Table Name"
+      descr="The name of the table to read"
+      type="tables"
+      use="optional"
+    />
+    <Parameter id="pollperiod" 
+      label="Poll Period (Seconds)" 
+      descr="Period for polling for new contents, in seconds"
+      type="uint"
+      use="advanced"
+	  default="0"
+    />
+    <Parameter id="dateFormat" 
+      label="Date Format" 
+      descr="Format string for parsing date values"
+      type="string"
+      use="advanced"
+      default="%Y-%m-%dT%H:%M:%S"
+    />
+    <Parameter id="timestampFormat" 
+      label="Timestamp Format" 
+      descr="Format string for parsing timestamp values"
+      type="string"
+      use="advanced"
+      default="%Y-%m-%dT%H:%M:%S"
+    />
+    <Parameter id="permutation" 
+      label="Field Mapping" 
+      descr="Mapping between the in-platform and external fields"
+      type="permutation"
+      use="advanced"
+    />
+	<Parameter id="propertyset" 
+      label="propertyset" 
+      descr="to look up properties in project configuration"
+      type="string"
+      use="advanced"
+      default=""/>
+	  
+	<Parameter id="timestampSequenceColumn" 
+      label="Timestamp sequence column name" 
+      descr="The database column name used as the record timestamp sequence"
+      type="string"
+      use="advanced"
+      default=""
+	  />
+	  
+	<Parameter id="recordCounterColumn" 
+      label="Record counter column name" 
+      descr="The database column name used as the record sequence counter"
+      type="string"
+      use="advanced"
+      default=""
+	  />  
+	  
+	<Parameter id="timestampSequenceInitValue" 
+      label="Timestamp sequence initial value" 
+      descr="The initial value for record timestamp sequence in '%Y-%m-%d %H:%M:%S' format. Default: adapter library loading time"
+      type="string"
+      use="advanced"
+      default=""
+	  />
+	  
+	<Parameter id="recordCounterInitValue" 
+      label="Record counter initial value" 
+      descr="The initial value for record counter. Default: 0"
+      type="string"
+      use="advanced"
+      default="0"
+	  />	
+	  
+	  </Section>
+</Adapter>

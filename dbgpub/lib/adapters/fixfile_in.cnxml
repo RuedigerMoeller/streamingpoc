@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Adapter type="input"
+  id="fixfile_in"
+  label="File FIX Input"
+  descr="Reads FIX messages from a file"
+>
+  <Library file="fix_in" type="binary"/>
+  <Special>
+    <Internal id="sourceType" 
+      label="Source Type" 
+      type="string"
+      default="file"
+    />
+  </Special>
+  <Section>
+    <Parameter id="fixVersion"
+      label="FIX Version" 
+      descr="FIX version"
+      type="choice"
+      use="required"
+      default="4.2">
+      <ValueList>
+        <Value value="4.2" label="4.2"/>
+        <Value value="4.3" label="4.3"/>
+		<Value value="4.4" label="4.4"/>
+		<Value value="5.0" label="5.0"/>
+      </ValueList>
+    </Parameter>
+    <Parameter id="fixMessageType" 
+      label="FIX Message Type" 
+      descr="FIX message type"
+      type="string"
+      use="required"
+    />
+    <Parameter id="fileName" 
+      label="File" 
+      descr="File containing FIX messages"
+      type="filename"
+      use="required"
+    />
+    <Parameter id="dateFormat" 
+      label="Date Format" 
+      descr="Date format"
+      type="string"
+      use="advanced"
+      default="%Y%m%d-%H:%M:%S"
+    />
+    <Parameter id="timestampFormat" 
+      label="Timestamp Format" 
+      descr="Timestamp format"
+      type="string"
+      use="advanced"
+      default="%Y%m%d-%H:%M:%S"
+    />
+	<Parameter id="timeFormat"
+	  label="Time Format"
+	  descr="Time format"
+	  type="string"
+	  use="advanced"
+	  default="%H:%M:%S"
+	/>
+	<Parameter id="propertyset" 
+      label="propertyset" 
+      descr="to look up properties in project configuration"
+      type="string"
+      use="advanced"
+      default=""/>  
+  </Section>
+</Adapter>

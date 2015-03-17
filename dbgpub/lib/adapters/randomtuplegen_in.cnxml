@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Adapter type="input"
+  id="randomtuplegen_in"
+  label="Random Tuples Generator"
+  descr="Generate randomized data based on schema definition"
+>
+<Library file="randomtuplegen_in" type="binary"/>
+<Special>
+</Special>
+<Section>
+    <Parameter id="Rate"
+      label="Rate"
+      descr="How fast this adapter generates messages per second"
+      type="uint"
+      use="optional"
+      default="100"/>
+    <Parameter id="RowCount"
+      label="RowCount"
+      descr="How many rows to generate. If the Row Count is 0, then infinity is assumed"
+      type="uint"
+      use="optional"
+      default="0"/>
+    <Parameter id="TimeFormat"
+      label="Time Format"
+      descr="Format string for parsing time values"
+      type="string"
+      use="advanced"
+      default="%H:%M:%S"/>
+    <Parameter id="DateFormat"
+      label="Date Format"
+      descr="Format string for parsing date values"
+      type="string"
+      use="advanced"
+      default="%Y-%m-%d %H:%M:%S"/>
+    <Parameter id="TimestampFormat"
+      label="Timestamp Format"
+      descr="Format string for parsing timestamp values"
+      type="string"
+      use="advanced"
+      default="%Y-%m-%d %H:%M:%S"/>
+    <Parameter id="TimestampBase"
+      label="TimestampBase"
+      descr="The initial time for message timestamps"
+      type="string"
+      use="advanced"/>
+    <Parameter id="propertyset" 
+      label="propertyset" 
+      descr="to look up properties in project configuration"
+      type="string"
+      use="advanced"
+      default=""/>  	  
+    <Parameter id="blockSize"
+      label="Block Size"
+      descr="Number of records to block into one pseudo-transaction"
+      type="int"
+      use="advanced"
+      default="0"/>
+    <Parameter id="useEnvelopes"
+      label="Use envelopes"
+      descr="Use envelopes instead of transaction blocks"
+      type="boolean"
+      use="advanced"
+      default="false"/>
+ </Section>
+</Adapter>

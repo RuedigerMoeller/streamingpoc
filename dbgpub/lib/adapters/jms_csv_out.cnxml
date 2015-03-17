@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Adapter type="output"
+  id="jms_csv_out"
+  label="JMS CSV Output (deprecated)"
+  descr="Writes delimiter-separated data to JMS"
+>
+  <Library file="jms_out" type="binary"/>
+  <Special>
+    <Internal id="dataFormat" 
+      label="DataFormat" 
+      type="string"
+      default="CSV"
+    />
+    <Internal id="isDeprecated" 
+      label="isDeprecated" 
+      type="boolean"
+      default="true"
+    />
+  </Special>
+  <Section>
+     <Parameter id="outputBase" 
+      label="Include Base Content" 
+      descr="Output initial stream contents in addition to stream updates."
+      type="boolean"
+      use="optional"
+      default="false"
+    />
+    <Parameter id="delimiter" 
+      label="Delimiter" 
+      descr="Field delimiter"
+      type="string"
+      use="required"
+      default=","
+    />
+    <Parameter id="connectionFactory" 
+      label="Connection Factory"
+      descr="Connection factory name. E.g, ConnectionFactory"
+      type="string"
+      use="required"
+      default="ConnectionFactory"
+    />
+    <Parameter id="jndiContextFactory" 
+      label="JNDI Context Factory" 
+      descr="Context Factory for JNDI context initialization. E.g, org.apache.activemq.jndi.ActiveMQInitialContextFactory"
+      type="string"
+      use="required"
+      default="org.apache.activemq.jndi.ActiveMQInitialContextFactory"
+    />
+    <Parameter id="jndiURL" 
+      label="JNDI URL" 
+      descr="JNDI URL e.g., tcp://localhost:61616"
+      type="string"
+      use="required"
+      default="tcp://localhost:61616"
+    />
+    <Parameter id="columnPropertyMap"
+      label="Column To Message Property Map"
+      descr="Comma-delimited MyColumn=MyMessageProperty correspondence list"
+      type="string"
+      use="advanced"
+    />
+    <Parameter id="destinationType" 
+      label="Destination Type" 
+      descr="Destination type"
+      type="choice"
+      use="required"
+      default="QUEUE">
+      <ValueList>
+        <Value value="QUEUE" label="Queue"/>
+        <Value value="TOPIC" label="Topic"/>
+      </ValueList>
+    </Parameter>
+    <Parameter id="destinationName" 
+      label="Destination Name" 
+      descr="Destination name"
+      type="string"
+      use="required"
+      default="csvout.queue"
+    />
+    <Parameter id="deliveryMode" 
+      label="Delivery Mode" 
+      descr="Delivery mode"
+      type="choice"
+      use="optional"
+      default="PERSISTENT">
+      <ValueList>
+        <Value value="PERSISTENT" label="Persistent"/>
+        <Value value="NON_PERSISTENT" label="Non-persistent"/>
+      </ValueList>
+    </Parameter>
+    <Parameter id="prependStreamNameOpcode"
+      label="Prepend Stream Name, Opcode" 
+      descr="If true, every CSV record is prepended with stream name, opcode"
+      type="boolean"
+      use="advanced"
+      default="false"
+    />
+    <Parameter id="timeFormat"
+      label="Time Format"
+      descr="Time format"
+      type="string"
+      use="advanced"
+      default="%H:%M:%S"
+    />
+    <Parameter id="dateFormat" 
+      label="DateFormat" 
+      descr="Date format"
+      type="string"
+      use="advanced"
+      default="%Y-%m-%dT%H:%M:%S"
+    />
+    <Parameter id="timestampFormat" 
+      label="Timestamp Format" 
+      descr="Timestamp format"
+      type="string"
+      use="advanced"
+      default="%Y-%m-%dT%H:%M:%S"
+    />
+    <Parameter id="propertyset" 
+      label="propertyset" 
+      descr="to look up properties in project configuration"
+      type="string"
+      use="advanced"
+      default=""/>  
+      <Parameter id="enablePSPGDMode"
+      label="Runs Adapter in PSP GD Mode" 
+      descr="Runs Adapter in PSP GD Mode"
+      type="boolean"
+      use="advanced"
+      default="false"
+    />
+    <Parameter id="gdKeyColumn" 
+      label="Name of column holding PSP GD key"
+      descr="Name of column holding PSP GD key"
+      type="string"
+      use="advanced"
+    />
+    <Parameter id="gdOpcodeColumn" 
+      label="Name of column holding opcode"
+      descr="Name of column holding opcode"
+      type="string"
+      use="advanced"
+    />
+    <Parameter id="gdControlStream" 
+      label="Name of truncate stream"
+      descr="Name of truncate stream"
+      type="string"
+      use="advanced"
+    />    
+    <Parameter id="gdPurgeInterval" 
+      label="Purge after number of records"
+      descr="Purge after number of records"
+      type="int"
+      use="advanced"
+      default="1000"
+    />
+    <Parameter id="gdPSPBatchSize" 
+      label="Batch Size to update truncate stream"
+      descr="Batch Size to update truncate stream"
+      type="int"
+      use="advanced"
+      default="1000"
+    />
+	<Parameter id="enableGDMode"
+      label="Runs Adapter in GD Mode" 
+      descr="Runs Adapter in GD Mode"
+      type="boolean"
+      use="advanced"
+      default="false"
+    />
+    <Parameter id="enableGDCache" 
+      label="Enable the adapter internal cache mode"
+      descr="When true, only rows have been checkpointed will be sent to adapter, others will be cached internally. This setting will be ignored if the attached stream is not running on GD with CP mode."
+      type="boolean"
+      use="advanced"
+      default="true"
+    />
+	<Parameter id="gdBatchSize" 
+      label="GD Batch Size"
+      descr="The number indicates every how many blocks will an commit command be sent to adapter and a GDCommit be sent to stream."
+      type="int"
+      use="advanced"
+	  default="10"
+    />
+  </Section>
+</Adapter>

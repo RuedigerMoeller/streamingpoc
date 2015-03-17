@@ -18,7 +18,7 @@ ClusterConf {
 
             # em1: 172.23.203.239  p5p1: 192.168.0.1  ttbm50
             # p5p1: 192.168.0.2  ttbm51
-            interfaceAddr:  192.168.0.1
+            interfaceAddr:  192.168.0.2
 
             multicastAddr:  229.9.9.10
             port:      46789
@@ -39,7 +39,7 @@ ClusterConf {
             loopBack: false
 
             # em1: 172.23.203.239  p5p1: 192.168.0.1
-            interfaceAddr:  192.168.0.1
+            interfaceAddr:  192.168.0.2
             ttl: 1
 
             multicastAddr:  229.10.10.11
