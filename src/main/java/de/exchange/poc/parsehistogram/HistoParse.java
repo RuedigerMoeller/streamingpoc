@@ -1,9 +1,6 @@
 package de.exchange.poc.parsehistogram;
 
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 
 /**
@@ -59,6 +56,24 @@ public class HistoParse {
 
     public static void main( String a[] ) throws IOException {
         HistoParse hp = new HistoParse();
+
+        File f[] = new File( "/home/moelrue/intermediates/esper_fc/network").listFiles();
+        for (int i = 0; i < f.length; i++) {
+            File file = f[i];
+            if ( file.getName().endsWith(".txt") ) {
+                ArrayList<POCHistogram> parse = hp.parse(file);
+                for (int j = 0; j < parse.size(); j++) {
+                    POCHistogram pocHistogram = parse.get(j);
+                    pocHistogram.fillPercentile();
+                    final String newFileName = new File(file.getParent() + File.separator + file.getName().substring(file.getName().length() - 4)) + "_" + i + ".csv";
+                    PrintStream csv = new PrintStream( new FileOutputStream(newFileName) );
+                    pocHistogram.entries.forEach( entry -> {
+                        csv.println(entry.getTime()+";"+entry.getCount()+";"+entry.getPerc());
+                    });
+                    csv.close();
+                }
+            }
+        }
         ArrayList<POCHistogram> parse = hp.parse(new File("/home/moelrue/IdeaProjects/streamingpoc/rawhistos/c-hdr-sample.txt"));
     }
 

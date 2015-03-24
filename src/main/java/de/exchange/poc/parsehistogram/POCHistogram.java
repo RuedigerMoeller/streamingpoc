@@ -7,7 +7,8 @@ import java.util.ArrayList;
  */
 public class POCHistogram {
 
-    static class HIEntry {
+    public static class HIEntry {
+
         public HIEntry(double time, int count) {
             this.time = time;
             this.count = count;
@@ -15,6 +16,19 @@ public class POCHistogram {
 
         double time;
         int count;
+        public double perc;
+
+        public double getTime() {
+            return time;
+        }
+
+        public int getCount() {
+            return count;
+        }
+
+        public double getPerc() {
+            return perc;
+        }
     }
 
     ArrayList<HIEntry> entries = new ArrayList<>();
@@ -25,13 +39,23 @@ public class POCHistogram {
         maxCount = Math.max(maxCount,count);
     }
 
+    public void fillPercentile() {
+        int accQty = 0;
+        for (int i = 0; i < entries.size(); i++) {
+            HIEntry entry = entries.get(i);
+            accQty += entry.count;
+            double percentile = (double)accQty/maxCount;
+            entry.perc = percentile;
+        }
+    }
+
     public void dump() {
         System.out.println("Histogram");
         int accQty = 0;
         for (int i = 0; i < entries.size(); i++) {
             HIEntry entry = entries.get(i);
             accQty += entry.count;
-            double percentile = (double)entry.count/maxCount;
+            double percentile = (double)accQty/maxCount;
             System.out.println(entry.time+";"+entry.count+";"+String.format("%.2f",percentile));
         }
     }
